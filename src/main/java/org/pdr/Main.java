@@ -25,6 +25,7 @@ public class Main extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+
     }
 
     @Override
