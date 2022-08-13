@@ -5,7 +5,7 @@ import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
 
-public class EchoService extends Service {
+public class EchoService implements Service {
     @Override
     public Service processUpdate(InternalUpdate internalUpdate) {
         String userAnswer = internalUpdate.getMessageText();
@@ -14,5 +14,9 @@ public class EchoService extends Service {
 
         Main.CHAT_SENDER.execute(textMessage);
         return this;
+    }
+
+    public static void sendHiMessage(long chatId) {
+        Main.CHAT_SENDER.execute(new TextMessage("/help - опис команд, /start - почати тестування, вибір кількості питань, /stop - зупинка тесту").setChatId(chatId));
     }
 }

@@ -24,7 +24,7 @@ public class MyProperties {
         try (FileInputStream fis = new FileInputStream(PATH)) {
             properties.load(fis);
         } catch (IOException e) {
-            //#TODO
+            //#TODO add logger
         }
         return properties;
     }

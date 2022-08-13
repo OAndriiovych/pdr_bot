@@ -32,7 +32,8 @@ public class TextMessage  extends SendMessage implements MessageI{
     }
 
     @Override
-    public void setChatId(long chatID) {
+    public MessageI setChatId(long chatID) {
         super.setChatId(chatID+"");
+        return this;
     }
 }

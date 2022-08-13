@@ -15,6 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+import javax.validation.constraints.NotNull;
 import java.util.concurrent.TimeUnit;
 
 public class Main extends ChatSender {
@@ -27,7 +28,8 @@ public class Main extends ChatSender {
             CacheBuilder.newBuilder().expireAfterAccess(7, TimeUnit.DAYS).build(
                     new CacheLoader<>() {
                         @Override
-                        public Service load(Long chatId) {
+                        public Service load(@NotNull Long chatId) {
+                            EchoService.sendHiMessage(chatId);
                             return new EchoService();
                         }
                     });
@@ -36,10 +38,11 @@ public class Main extends ChatSender {
     public static void main(String[] args) {
         logger.info("Bot started");
         try {
-            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(CHAT_SENDER);
+            new TelegramBotsApi(DefaultBotSession.class).registerBot(CHAT_SENDER);
         } catch (TelegramApiException e) {
             logger.error("ERROR in Main method", e);
+        } catch (Throwable throwable) {
+            logger.error("some ecp", throwable);
         }
     }
 

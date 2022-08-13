@@ -24,6 +24,7 @@ public abstract class ChatSender extends TelegramLongPollingBot implements ChatS
         try {
             return tryToSend(message);
         } catch (TelegramApiException e) {
+            //#TODO  add logger
             e.printStackTrace();
             return new Message();
         }
@@ -37,6 +38,7 @@ public abstract class ChatSender extends TelegramLongPollingBot implements ChatS
         } else if (message instanceof EditMessageReplyMarkup) {
             return (Message) execute((EditMessageReplyMarkup) message);
         } else {
+            //#TODO  add logger
             throw new UnsupportedOperationException("not implemented yet");
         }
     }
