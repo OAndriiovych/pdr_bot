@@ -70,14 +70,6 @@
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>scripts</directory>
-                <includes>
-                    <include>**/*.*</include>
-                </includes>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
