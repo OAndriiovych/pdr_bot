@@ -1,5 +1,6 @@
 package org.pdr.adatpers.messages;
 
+import org.pdr.utils.DataStructure;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -7,15 +8,19 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 
 import java.util.ArrayList;
 import java.util.List;
-
-public class TextMessage  extends SendMessage implements MessageI{
+@DataStructure
+public class TextMessage extends SendMessage implements MessageI {
     public TextMessage(String text, ReplyKeyboard replyKeyboard) {
         this(text);
         setReplyMarkup(replyKeyboard);
     }
 
-    public TextMessage(String text, List<List<String>> nameOfButtons) {
-        this(text);
+
+    public TextMessage(String text) {
+        setText(text);
+    }
+
+    public MessageI setButtons(List<List<String>> nameOfButtons) {
         List<KeyboardRow> commands = new ArrayList<>();
         for (List<String> nameOfButtonsByRows : nameOfButtons) {
             KeyboardRow rowOfButtons = new KeyboardRow();
@@ -25,15 +30,12 @@ public class TextMessage  extends SendMessage implements MessageI{
             commands.add(rowOfButtons);
         }
         setReplyMarkup(new ReplyKeyboardMarkup(commands, true, true, true, null));
-    }
-
-    public TextMessage(String text) {
-        setText(text);
+        return this;
     }
 
     @Override
     public MessageI setChatId(long chatID) {
-        super.setChatId(chatID+"");
+        super.setChatId(chatID + "");
         return this;
     }
 }

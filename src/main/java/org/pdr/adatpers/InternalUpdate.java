@@ -24,4 +24,20 @@ public class InternalUpdate {
     public String getMessageText() {
         return update.getMessage().getText();
     }
+
+    public String getCallBackText() {
+        return update.getCallbackQuery().getMessage().getText();
+    }
+
+    public int getMessageId() {
+        return update.getMessage().getMessageId();
+    }
+
+    public int getCallBackMessageId() {
+        return update.getCallbackQuery().getMessage().getMessageId();
+    }
+
+    public String getCallbackData() {
+        return update.getCallbackQuery().getData();
+    }
 }

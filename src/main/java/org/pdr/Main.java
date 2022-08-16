@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import org.pdr.adatpers.ChatSender;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.services.EchoService;
+import org.pdr.services.MainMenuServ;
 import org.pdr.services.Service;
 import org.pdr.utils.MyProperties;
 import org.slf4j.Logger;
@@ -30,7 +31,8 @@ public class Main extends ChatSender {
                         @Override
                         public Service load(@NotNull Long chatId) {
                             EchoService.sendHiMessage(chatId);
-                            return new EchoService();
+                            MainMenuServ.sendButtons(chatId);
+                            return new MainMenuServ();
                         }
                     });
 
