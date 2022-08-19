@@ -1,5 +1,6 @@
 package org.pdr.adatpers;
 
+import org.telegram.telegrambots.meta.api.objects.Contact;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class InternalUpdate {
@@ -39,5 +40,9 @@ public class InternalUpdate {
 
     public String getCallbackData() {
         return update.getCallbackQuery().getData();
+    }
+
+    public Contact getUserInfo() {
+        return update.getMessage().getContact();
     }
 }

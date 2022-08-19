@@ -55,7 +55,7 @@ public class Question {
         if (hasPhoto()) {
             messageI = new PhotoMessage(caption, new InputFile(url), inlineKeyboardMarkup);
         } else {
-            messageI = new TextMessage(caption, inlineKeyboardMarkup);
+            messageI = new TextMessage(caption).setReplyKeyboard_(inlineKeyboardMarkup);
         }
         return messageI;
     }

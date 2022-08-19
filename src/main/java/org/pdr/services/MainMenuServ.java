@@ -9,6 +9,7 @@ import java.util.List;
 
 class MainMenuServ extends Service {
     private static final String ALL_QUESTION = "Тести";
+    private static final String USER_ROOM = "кабінет";
     private static final List<List<String>> listOfCommands = Collections.unmodifiableList(createListOfCommands());
 
     private static List<List<String>> createListOfCommands() {
@@ -16,6 +17,7 @@ class MainMenuServ extends Service {
         List<String> firstRow = new ArrayList<>();
         buttons.add(firstRow);
         firstRow.add(ALL_QUESTION);
+        firstRow.add(USER_ROOM);
         return buttons;
     }
 
@@ -31,6 +33,10 @@ class MainMenuServ extends Service {
             case ALL_QUESTION:
                 nextServ = EnumOfServices.QUIZ_CREATOR;
                 QuizCreatorServ.sendButtons(internalUpdate.getChatId());
+                break;
+            case USER_ROOM:
+                nextServ = EnumOfServices.USER_REGISTERED;
+                UserRegisteredServ.sendButtons(internalUpdate.getChatId());
                 break;
             default:
                 sendButtons(internalUpdate.getChatId());

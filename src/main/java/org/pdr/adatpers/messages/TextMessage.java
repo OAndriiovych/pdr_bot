@@ -9,18 +9,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import java.util.ArrayList;
 import java.util.List;
 @DataStructure
-public class TextMessage extends SendMessage implements MessageI {
-    public TextMessage(String text, ReplyKeyboard replyKeyboard) {
-        this(text);
-        setReplyMarkup(replyKeyboard);
-    }
-
+public class TextMessage extends SendMessage implements MessageI<TextMessage> {
 
     public TextMessage(String text) {
         setText(text);
     }
 
-    public MessageI setButtons(List<List<String>> nameOfButtons) {
+    public TextMessage setButtons(List<List<String>> nameOfButtons) {
         List<KeyboardRow> commands = new ArrayList<>();
         for (List<String> nameOfButtonsByRows : nameOfButtons) {
             KeyboardRow rowOfButtons = new KeyboardRow();
@@ -34,8 +29,13 @@ public class TextMessage extends SendMessage implements MessageI {
     }
 
     @Override
-    public MessageI setChatId(long chatID) {
+    public TextMessage setChatId(long chatID) {
         super.setChatId(chatID + "");
+        return this;
+    }
+
+    public TextMessage setReplyKeyboard_(ReplyKeyboard replyMarkup) {
+        setReplyMarkup(replyMarkup);
         return this;
     }
 }

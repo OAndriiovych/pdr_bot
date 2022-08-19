@@ -1,6 +1,7 @@
 package org.pdr.adatpers.messages;
 
-public interface MessageI {
+public interface MessageI<T extends MessageI> {
 
-    MessageI setChatId(long chatID);
+    T setChatId(long chatID);
+
 }
