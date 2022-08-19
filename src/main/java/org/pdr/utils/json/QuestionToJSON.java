@@ -2,7 +2,7 @@ package org.pdr.utils.json;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.pdr.model.Question;
+import org.pdr.entity.Question;
 
 import java.io.IOException;
 import java.nio.file.Files;

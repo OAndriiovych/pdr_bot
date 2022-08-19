@@ -1,4 +1,4 @@
-package org.pdr.model.repository;
+package org.pdr.repository;
 
 import java.util.HashMap;
 import java.util.Map;

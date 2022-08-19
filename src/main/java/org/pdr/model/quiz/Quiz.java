@@ -3,9 +3,8 @@ package org.pdr.model.quiz;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
-import org.pdr.model.Question;
-import org.pdr.model.repository.MessageRepository;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.pdr.entity.Question;
+import org.pdr.repository.MessageRepository;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.ArrayList;

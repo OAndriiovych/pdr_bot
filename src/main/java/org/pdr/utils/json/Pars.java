@@ -3,7 +3,7 @@ package org.pdr.utils.json;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.pdr.model.Question;
+import org.pdr.entity.Question;
 
 import java.io.IOException;
 import java.util.ArrayList;

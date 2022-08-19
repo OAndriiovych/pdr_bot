@@ -1,10 +1,11 @@
-package org.pdr.model;
+package org.pdr.model.quiz;
 
+import org.pdr.entity.Question;
 import org.pdr.model.quiz.Quiz;
 import org.pdr.model.quiz.QuizWithMarks;
 import org.pdr.model.quiz.QuizWithTime;
-import org.pdr.model.repository.QuestionCache;
-import org.pdr.model.repository.QuestionRepository;
+import org.pdr.repository.QuestionCache;
+import org.pdr.repository.QuestionRepository;
 
 import java.util.Queue;
 

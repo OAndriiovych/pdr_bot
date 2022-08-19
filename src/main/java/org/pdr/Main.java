@@ -32,7 +32,7 @@ public class Main extends ChatSender {
                         @Override
                         public EnumOfServices load(@NotNull Long chatId) {
                             CHAT_SENDER.execute(new TextMessage("Вітаю в нашому чат боті").setChatId(chatId));
-                            return EnumOfServices.MAIN_MANU;
+                            return EnumOfServices.USER_REGISTERED;
                         }
                     });
 

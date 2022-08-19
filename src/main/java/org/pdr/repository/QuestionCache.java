@@ -1,6 +1,6 @@
-package org.pdr.model.repository;
+package org.pdr.repository;
 
-import org.pdr.model.Question;
+import org.pdr.entity.Question;
 import org.pdr.utils.json.JSONToQuestion;
 
 import java.io.File;

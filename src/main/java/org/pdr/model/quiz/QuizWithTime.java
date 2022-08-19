@@ -3,7 +3,7 @@ package org.pdr.model.quiz;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
-import org.pdr.model.Question;
+import org.pdr.entity.Question;
 
 import java.util.List;
 import java.util.Queue;

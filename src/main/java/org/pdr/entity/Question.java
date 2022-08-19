@@ -1,4 +1,4 @@
-package org.pdr.model;
+package org.pdr.entity;
 
 import org.json.JSONObject;
 import org.pdr.adatpers.messages.MessageI;

@@ -1,4 +1,4 @@
-package org.pdr.model.repository;
+package org.pdr.repository;
 
 import org.pdr.model.quiz.Quiz;
 

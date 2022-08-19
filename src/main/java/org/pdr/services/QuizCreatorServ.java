@@ -4,10 +4,10 @@ import org.pdr.Main;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
-import org.pdr.model.QuizBuilder;
+import org.pdr.model.quiz.QuizBuilder;
 import org.pdr.model.quiz.Quiz;
-import org.pdr.model.repository.MessageRepository;
-import org.pdr.model.repository.QuizRepository;
+import org.pdr.repository.MessageRepository;
+import org.pdr.repository.QuizRepository;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.ArrayList;
