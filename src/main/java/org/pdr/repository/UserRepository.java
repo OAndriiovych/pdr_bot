@@ -10,10 +10,7 @@ public class UserRepository {
     private static final Map<Long, User> repository = new HashMap<>();
 
     public void save(User newUser) {
-        if (newUser.chatId == null) {
-            throw new RuntimeException("chat id can not be null");
-        }
-        repository.put(newUser.chatId, newUser);
+        repository.put(newUser.getChatId(), newUser);
     }
 
     public User getUserByChatId(long chatId) {

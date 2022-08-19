@@ -18,6 +18,9 @@ class UserRegisteredServ extends Service {
 
     private static final String REG_USER = "Створити аккаунт";
     private static final String HISTORY = "Подивитись історію";
+
+    private static final String PAY_FOR_SUBSCRIPTION = "Оплатити підписку";
+    private static final String SUBSCRIPTION_DETAIL = "Переваги підписки";
     private static final List<List<String>> listOfCommands = Collections.unmodifiableList(createListOfCommands());
     private static final String REQUEST_ACCESS_PHONE = "Запит на доступ до телефону";
 
@@ -28,6 +31,11 @@ class UserRegisteredServ extends Service {
         List<String> firstRow = new ArrayList<>();
         buttons.add(firstRow);
         firstRow.add(REG_USER);
+        firstRow.add(HISTORY);
+        List<String> secRow = new ArrayList<>();
+        buttons.add(secRow);
+        secRow.add(PAY_FOR_SUBSCRIPTION);
+        secRow.add(SUBSCRIPTION_DETAIL);
         return buttons;
     }
 
@@ -84,6 +92,11 @@ class UserRegisteredServ extends Service {
                 } else {
                     CHAT_SENDER.execute(new TextMessage("Тільки по платній підписці").setChatId(chatId));
                 }
+                break;
+            case SUBSCRIPTION_DETAIL:
+                //#TODO
+                CHAT_SENDER.execute(new TextMessage("Нам треба гроші").setChatId(chatId));
+                sendButtons(chatId);
                 break;
             default:
                 sendButtons(chatId);
