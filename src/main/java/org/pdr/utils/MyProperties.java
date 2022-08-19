@@ -19,6 +19,14 @@ public class MyProperties {
         return PROPERTIES.getProperty("bot.name");
     }
 
+    public static String getLiqPayPublicKey() {
+        return PROPERTIES.getProperty("liqpay.publicKey");
+    }
+
+    public static String getLiqPayPrivateKey() {
+        return PROPERTIES.getProperty("liqpay.privateKey");
+    }
+
     private static Properties getProperty() {
         Properties properties = new Properties();
         try (FileInputStream fis = new FileInputStream(PATH)) {

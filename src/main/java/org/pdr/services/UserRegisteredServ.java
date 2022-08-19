@@ -1,9 +1,12 @@
 package org.pdr.services;
 
+import org.pdr.entity.Payment;
+import org.pdr.repository.PaymentRepository;
 import org.pdr.repository.UserRepository;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.TextMessage;
 import org.pdr.entity.User;
+import org.pdr.utils.LiqPayUtil;
 import org.telegram.telegrambots.meta.api.objects.Contact;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -18,13 +21,23 @@ class UserRegisteredServ extends Service {
 
     private static final String REG_USER = "Створити аккаунт";
     private static final String HISTORY = "Подивитись історію";
-
     private static final String PAY_FOR_SUBSCRIPTION = "Оплатити підписку";
     private static final String SUBSCRIPTION_DETAIL = "Переваги підписки";
-    private static final List<List<String>> listOfCommands = Collections.unmodifiableList(createListOfCommands());
     private static final String REQUEST_ACCESS_PHONE = "Запит на доступ до телефону";
 
-    private final UserRepository userRepository = new UserRepository();
+    private static final List<List<String>> listOfCommands = Collections.unmodifiableList(createListOfCommands());
+
+    private final UserRepository userRepository;
+
+    private final PaymentRepository paymentRepository;
+
+    private final LiqPayUtil liqPayUtil;
+
+    public UserRegisteredServ() {
+        this.userRepository = new UserRepository();
+        this.paymentRepository = new PaymentRepository();
+        this.liqPayUtil = new LiqPayUtil();
+    }
 
     private static List<List<String>> createListOfCommands() {
         List<List<String>> buttons = new ArrayList<>();
@@ -97,6 +110,32 @@ class UserRegisteredServ extends Service {
                 //#TODO
                 CHAT_SENDER.execute(new TextMessage("Нам треба гроші").setChatId(chatId));
                 sendButtons(chatId);
+                break;
+            case PAY_FOR_SUBSCRIPTION:
+                User userByChatId = userRepository.getUserByChatId(chatId);
+                if (userByChatId == null) {
+                    CHAT_SENDER.execute(new TextMessage("Будь ласка зареєструйтесь спочатку").setChatId(chatId));
+                    sendRequestAccessForPhone(chatId);
+                    break;
+                }
+                Payment payment = paymentRepository.getPaymentByChatId(chatId);
+                if (payment == null) {
+                    payment = new Payment();
+                    payment.setLinkUser(userByChatId);
+                    //#TODO add Logger
+                    paymentRepository.save(payment);
+                }else if (payment.isPaid()) {
+                    CHAT_SENDER.execute(new TextMessage("Ваша підписка ще активна").setChatId(chatId));
+                    break;
+                }
+                try {
+                    String urlForPayment = liqPayUtil.createUrlForPayment(payment);
+                    CHAT_SENDER.execute(new TextMessage("Сторінка для оплати готова").setChatId(chatId));
+                    CHAT_SENDER.execute(new TextMessage(urlForPayment).setChatId(chatId));
+                } catch (Exception e) {
+                    //#TODO add Logger
+                    CHAT_SENDER.execute(new TextMessage("Вибачне не можемо створити сторінку для оплати. Спробуйте пізніше будь ласка").setChatId(chatId));
+                }
                 break;
             default:
                 sendButtons(chatId);
