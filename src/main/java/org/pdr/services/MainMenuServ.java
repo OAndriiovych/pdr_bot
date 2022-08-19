@@ -1,6 +1,5 @@
 package org.pdr.services;
 
-import org.pdr.Main;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.TextMessage;
 
@@ -8,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MainMenuServ implements Service {
+class MainMenuServ extends Service {
     private static final String ALL_QUESTION = "Тести";
     private static final List<List<String>> listOfCommands = Collections.unmodifiableList(createListOfCommands());
 
@@ -21,20 +20,19 @@ public class MainMenuServ implements Service {
     }
 
     public static void sendButtons(long chatId) {
-        CHAT_SENDER.execute(new TextMessage("Вітаю в головному меню").setButtons(listOfCommands).setChatId(chatId));
+        CHAT_SENDER.execute(new TextMessage("Виберіть щось з наведених пунктів").setButtons(listOfCommands).setChatId(chatId));
     }
 
     @Override
-    public Service processUpdate(InternalUpdate internalUpdate) {
-        Service nextServ = this;
+    EnumOfServices processUpdate(InternalUpdate internalUpdate) {
+        EnumOfServices nextServ = EnumOfServices.MAIN_MANU;
         String userAnswer = internalUpdate.getMessageText();
         switch (userAnswer) {
             case ALL_QUESTION:
-                nextServ = new TestCreatorServ();
-                TestCreatorServ.sendButtons(internalUpdate.getChatId());
+                nextServ = EnumOfServices.QUIZ_CREATOR;
+                QuizCreatorServ.sendButtons(internalUpdate.getChatId());
                 break;
             default:
-                CHAT_SENDER.execute(new TextMessage("Не зрозумів тебе").setChatId(internalUpdate.getChatId()));
                 sendButtons(internalUpdate.getChatId());
         }
         return nextServ;

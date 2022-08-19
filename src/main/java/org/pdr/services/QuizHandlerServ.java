@@ -9,13 +9,13 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.List;
 
-public class QuizHandlerServ implements Service {
+class QuizHandlerServ extends Service {
     MessageRepository messageRepository = new MessageRepository();
     QuizRepository quizRepository = new QuizRepository();
 
     @Override
-    public Service processUpdate(InternalUpdate internalUpdate) {
-        Service nextServ = this;
+    EnumOfServices processUpdate(InternalUpdate internalUpdate) {
+        EnumOfServices nextServ = EnumOfServices.QUIZ_HANDLER;
         long chatId = internalUpdate.getChatId();
         Quiz quiz = quizRepository.getByChatId(chatId);
         List<MessageI> messageIS = quiz.processCallbackQuery(internalUpdate);
@@ -28,7 +28,7 @@ public class QuizHandlerServ implements Service {
         } else {
             quizRepository.removeQuiz(chatId);
             messageRepository.removeMessage(chatId);
-            nextServ = new MainMenuServ();
+            nextServ = EnumOfServices.MAIN_MANU;
             MainMenuServ.sendButtons(chatId);
         }
         return nextServ;

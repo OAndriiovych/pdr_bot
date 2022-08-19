@@ -1,7 +1,6 @@
 package org.pdr.services;
 
 import org.pdr.Main;
-import org.pdr.adatpers.ChatSender;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TestCreatorServ implements Service {
+class QuizCreatorServ extends Service {
     QuizRepository quizRepository = new QuizRepository();
     MessageRepository messageRepository = new MessageRepository();
     QuizBuilder quizBuilder = new QuizBuilder();
@@ -42,8 +41,8 @@ public class TestCreatorServ implements Service {
 
 
     @Override
-    public Service processUpdate(InternalUpdate internalUpdate) {
-        Service nextServ = this;
+    EnumOfServices processUpdate(InternalUpdate internalUpdate) {
+        EnumOfServices nextServ = EnumOfServices.QUIZ_CREATOR;
         String userAnswer = internalUpdate.getMessageText();
         long chatId = internalUpdate.getChatId();
         switch (userAnswer) {
@@ -54,7 +53,7 @@ public class TestCreatorServ implements Service {
                 messageI.setChatId(chatId);
                 Message execute = CHAT_SENDER.execute(messageI);
                 messageRepository.registrateNewMessageId(chatId, execute.getMessageId());
-                nextServ = new QuizHandlerServ();
+                nextServ = EnumOfServices.QUIZ_HANDLER;
                 break;
             default:
                 CHAT_SENDER.execute(new TextMessage("Не зрозумів тебе").setChatId(chatId));
