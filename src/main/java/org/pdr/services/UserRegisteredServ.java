@@ -17,6 +17,7 @@ import java.util.List;
 class UserRegisteredServ extends Service {
 
     private static final String REG_USER = "Створити аккаунт";
+    private static final String HISTORY = "Подивитись історію";
     private static final List<List<String>> listOfCommands = Collections.unmodifiableList(createListOfCommands());
     private static final String REQUEST_ACCESS_PHONE = "Запит на доступ до телефону";
 
@@ -52,12 +53,8 @@ class UserRegisteredServ extends Service {
         long chatId = internalUpdate.getChatId();
         switch (userAnswer) {
             case REQUEST_ACCESS_PHONE:
-                User newUser = new User();
-                newUser.chatId = chatId;
                 Contact userInfo = internalUpdate.getUserInfo();
-                newUser.phone = userInfo.getPhoneNumber();
-                newUser.userName = userInfo.getFirstName();
-                userRepository.save(newUser);
+                userRepository.save(new User(chatId, userInfo.getUserId(), userInfo.getPhoneNumber(), userInfo.getFirstName()));
                 CHAT_SENDER.execute(new TextMessage("Ми вас зареєстрували").setChatId(chatId));
                 sendButtons(chatId);
                 break;
@@ -78,6 +75,14 @@ class UserRegisteredServ extends Service {
                     sendButtons(chatId);
                 } else {
                     sendRequestAccessForPhone(chatId);
+                }
+                break;
+            case HISTORY:
+                User user = userRepository.getUserByChatId(chatId);
+                if (user.isPrem()) {
+
+                } else {
+                    CHAT_SENDER.execute(new TextMessage("Тільки по платній підписці").setChatId(chatId));
                 }
                 break;
             default:
