@@ -16,7 +16,7 @@ public class PhotoMessage extends SendPhoto implements MessageI {
     }
 
     @Override
-    public MessageI setChatId(long chatId) {
+    public PhotoMessage setChatId(long chatId) {
         super.setChatId(chatId + "");
         return this;
     }

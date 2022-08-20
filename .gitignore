@@ -25,3 +25,4 @@ hs_err_pid*
 target/
 .idea/
 src/main/resources/bot.properties
+/aws_lambda/src/test/resources/bot.properties

@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import java.util.ArrayList;
 import java.util.List;
 @DataStructure
-public class TextMessage extends SendMessage implements MessageI<TextMessage> {
+public class TextMessage extends SendMessage implements MessageI {
 
     public TextMessage(String text) {
         setText(text);

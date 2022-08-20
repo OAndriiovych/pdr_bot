@@ -27,6 +27,10 @@ public class MyProperties {
         return PROPERTIES.getProperty("liqpay.privateKey");
     }
 
+    public static String getServerUrl() {
+        return PROPERTIES.getProperty("server.url");
+    }
+
     private static Properties getProperty() {
         Properties properties = new Properties();
         try (FileInputStream fis = new FileInputStream(PATH)) {

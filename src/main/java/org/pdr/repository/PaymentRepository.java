@@ -1,7 +1,6 @@
 package org.pdr.repository;
 
 import org.pdr.entity.Payment;
-import org.pdr.entity.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +17,6 @@ public class PaymentRepository {
     public Payment getPaymentByChatId(long chatId) {
         return repository.get(chatId);
     }
-
 
     private static class IdGenerator {
         private static int lastId = 0;

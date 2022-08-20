@@ -31,8 +31,9 @@ public class Main extends ChatSender {
                     new CacheLoader<>() {
                         @Override
                         public EnumOfServices load(@NotNull Long chatId) {
-                            CHAT_SENDER.execute(new TextMessage("Вітаю в нашому чат боті").setChatId(chatId));
-                            return EnumOfServices.USER_REGISTERED;
+                            logger.info("new User " + chatId);
+                            CHAT_SENDER.execute(new TextMessage("Вітаю в нашому чат боті").setChatId((long) chatId));
+                            return EnumOfServices.MAIN_MANU;
                         }
                     });
 
