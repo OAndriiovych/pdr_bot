@@ -11,19 +11,32 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
 
+
+        <!-- FOR liqpay -->
         <!-- https://github.com/liqpay/sdk-java -->
         <liqpay-sdk.version>0.7-SNAPSHOT</liqpay-sdk.version>
         <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
-        <!-- dep for liqpay-sdk-->
         <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
 
+
+        <!-- FOR AWS -->
         <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-events -->
         <aws-lambda-java-events.version>3.11.0</aws-lambda-java-events.version>
-
+        <aws-lambda-java-core.version>1.2.1</aws-lambda-java-core.version>
         <powertools-parameters.version>1.12.3</powertools-parameters.version>
+
+
+        <!-- FOR TEST -->
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
         <mockito-core.version>4.7.0</mockito-core.version>
-        <junit-jupiter.version>RELEASE</junit-jupiter.version>
+        <junit-jupiter.version>5.9.0</junit-jupiter.version>
+
+
+        <!-- FOR BUILD -->
+        <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
+        <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
     </properties>
+
     <repositories>
         <repository>
             <id>repository</id>
@@ -34,7 +47,9 @@
             </snapshots>
         </repository>
     </repositories>
+
     <dependencies>
+        <!-- FOR liqpay -->
         <dependency>
             <groupId>com.liqpay</groupId>
             <artifactId>liqpay-sdk</artifactId>
@@ -46,6 +61,8 @@
             <version>${jaxb-api.version}</version>
         </dependency>
 
+
+        <!-- FOR AWS -->
         <dependency>
             <groupId>software.amazon.lambda</groupId>
             <artifactId>powertools-parameters</artifactId>
@@ -56,9 +73,14 @@
             <artifactId>aws-lambda-java-events</artifactId>
             <version>${aws-lambda-java-events.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-lambda-java-core</artifactId>
+            <version>${aws-lambda-java-core.version}</version>
+        </dependency>
 
 
-        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+        <!-- FOR TEST -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -75,16 +97,18 @@
 
     <build>
         <plugins>
-
+            <!-- to run test-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M7</version>
+                <version>${maven-surefire-plugin.version}</version>
             </plugin>
+
+            <!-- to build flat build-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>${maven-shade-plugin.version}</version>
                 <configuration>
                 </configuration>
                 <executions>
