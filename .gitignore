@@ -26,3 +26,4 @@ target/
 .idea/
 src/main/resources/bot.properties
 /aws_lambda/src/test/resources/bot.properties
+*.iml

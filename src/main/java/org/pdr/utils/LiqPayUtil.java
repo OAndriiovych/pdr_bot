@@ -20,16 +20,20 @@ public class LiqPayUtil extends LiqPay {
         Map<String, String> params = new HashMap<>();
         params.put("version", "3");
         params.put("action", "pay");
-        params.put("amount", "1");
+        params.put("amount", "1488");
         params.put("currency", "USD");
         params.put("server_url", serverUrl);
-        params.put("description", "Payment");
-        params.put("order_id", payment.getId() + "");
+        params.put("description", "Марічка оплати будь ласка. ну прошу тебе!");
+        params.put("order_id", payment.getId() + "1234");
         params.put("sandbox", "1"); // enable the testing environment and card will NOT charged. If not set will be used property isCnbSandbox()
 
         // code from LiqPay.cnb_form(Map<String, String> params)
         String data = com.liqpay.LiqPayUtil.base64_encode(JSONObject.toJSONString(this.withSandboxParam(this.withBasicApiParams(params))));
         String signature = this.createSignature(data);
         return "https://www.liqpay.ua/api/3/checkout?data=" + data + "&signature=" + signature;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new LiqPayUtil().createUrlForPayment(new Payment()));
     }
 }

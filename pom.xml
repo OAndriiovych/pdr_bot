@@ -8,7 +8,7 @@
     <artifactId>bot</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>aws_lambda</module>
+        <module>aws-module/LiqpayHandler</module>
     </modules>
     <packaging>pom</packaging>
 
