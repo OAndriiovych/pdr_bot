@@ -8,8 +8,23 @@
     <artifactId>bot</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>aws-module/LiqpayHandler</module>
+        <module>LiqpayHandler</module>
+        <module>tg-bot</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-meta</artifactId>
+            <version>6.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots</artifactId>
+            <version>6.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
     <packaging>pom</packaging>
 
     <name>bot</name>
@@ -19,23 +34,29 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
 
-        <telegrambots.version>6.1.0</telegrambots.version>
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-reload4j -->
-        <jsoup.version>1.15.2</jsoup.version>
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
-        <slf4j-api.version>1.7.36</slf4j-api.version>
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-reload4j -->
-        <slf4j-reload4j.version>1.7.36</slf4j-reload4j.version>
+
+        <!-- FOR BUILD -->
+        <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
+        <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
         <maven-jar-plugin.version>3.1.0</maven-jar-plugin.version>
         <spring-boot-maven-plugin.version>2.7.2</spring-boot-maven-plugin.version>
 
-        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
-        <guava.version>31.1-jre</guava.version>
+
 
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <junit-jupiter-api.version>5.9.0</junit-jupiter-api.version>
         <!-- https://github.com/liqpay/sdk-java -->
         <liqpay-sdk.version>0.7-SNAPSHOT</liqpay-sdk.version>
+
+
+        <!-- FOR TEST -->
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+        <mockito-core.version>4.7.0</mockito-core.version>
+        <junit-jupiter.version>5.9.0</junit-jupiter.version>
+
+
+
+
     </properties>
 
     <repositories>
@@ -49,57 +70,28 @@
         </repository>
     </repositories>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.liqpay</groupId>
-            <artifactId>liqpay-sdk</artifactId>
-            <version>${liqpay-sdk.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.telegram</groupId>
-            <artifactId>telegrambots</artifactId>
-            <version>${telegrambots.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>${jsoup.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-reload4j</artifactId>
-            <version>${slf4j-reload4j.version}</version>
-        </dependency>
-
-    </dependencies>
 
     <build>
         <plugins>
+            <!-- to run test-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin.version}</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>org.pdr.Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
             </plugin>
+
+            <!-- to build flat build-->
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot-maven-plugin.version}</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${maven-shade-plugin.version}</version>
+                <configuration>
+                </configuration>
                 <executions>
                     <execution>
+                        <phase>package</phase>
                         <goals>
-                            <goal>repackage</goal>
+                            <goal>shade</goal>
                         </goals>
                     </execution>
                 </executions>

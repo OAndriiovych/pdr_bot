@@ -1,5 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.pdr</groupId>
+        <artifactId>bot</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
     <groupId>org.pdr</groupId>
     <version>1.0-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
@@ -18,7 +24,6 @@
         <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
         <jaxb-api.version>2.4.0-b180830.0359</jaxb-api.version>
 
-
         <!-- FOR AWS -->
         <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-events -->
         <aws-lambda-java-events.version>3.11.0</aws-lambda-java-events.version>
@@ -26,15 +31,8 @@
         <powertools-parameters.version>1.12.3</powertools-parameters.version>
 
 
-        <!-- FOR TEST -->
-        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
-        <mockito-core.version>4.7.0</mockito-core.version>
-        <junit-jupiter.version>5.9.0</junit-jupiter.version>
 
 
-        <!-- FOR BUILD -->
-        <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
-        <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
     </properties>
 
     <repositories>
