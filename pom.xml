@@ -11,22 +11,8 @@
         <module>LiqpayHandler</module>
         <module>tg-bot</module>
     </modules>
-    <dependencies>
-        <dependency>
-            <groupId>org.telegram</groupId>
-            <artifactId>telegrambots-meta</artifactId>
-            <version>6.1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.telegram</groupId>
-            <artifactId>telegrambots</artifactId>
-            <version>6.1.0</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
-    <packaging>pom</packaging>
 
+    <packaging>pom</packaging>
     <name>bot</name>
 
     <properties>
@@ -42,7 +28,6 @@
         <spring-boot-maven-plugin.version>2.7.2</spring-boot-maven-plugin.version>
 
 
-
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <junit-jupiter-api.version>5.9.0</junit-jupiter-api.version>
         <!-- https://github.com/liqpay/sdk-java -->
@@ -53,8 +38,6 @@
         <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
         <mockito-core.version>4.7.0</mockito-core.version>
         <junit-jupiter.version>5.9.0</junit-jupiter.version>
-
-
 
 
     </properties>
