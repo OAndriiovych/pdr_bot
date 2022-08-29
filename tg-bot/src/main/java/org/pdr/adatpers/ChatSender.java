@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class ChatSender extends TelegramLongPollingBot implements ChatSenderI {
-
-
     @Override
     public List<Message> execute(List<MessageI> messageI) {
         return messageI.stream().map(this::execute).collect(Collectors.toList());
@@ -41,5 +39,11 @@ public abstract class ChatSender extends TelegramLongPollingBot implements ChatS
             //#TODO  add logger
             throw new UnsupportedOperationException("not implemented yet");
         }
+    }
+
+    @Override
+    public List<Message> execute(List<MessageI> messageIList, long chatId) {
+        messageIList.forEach(messageI -> messageI.setChatId(chatId));
+        return execute(messageIList);
     }
 }

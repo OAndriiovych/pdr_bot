@@ -9,4 +9,5 @@ public interface ChatSenderI {
 
     Message execute(MessageI messageI);
     List<Message> execute(List<MessageI> messageI);
+    List<Message> execute(List<MessageI> messageI,long chatId);
 }
