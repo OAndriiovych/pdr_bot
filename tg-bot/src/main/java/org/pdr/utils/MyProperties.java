@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class MyProperties {
-    private static final String PATH = "src/main/resources/bot.properties";
+    private static final String PATH = "tg-bot/src/main/resources/bot.properties";
     private static final Properties PROPERTIES = getProperty();
 
     private MyProperties() {
