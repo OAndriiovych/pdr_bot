@@ -4,14 +4,14 @@ import org.pdr.utils.DataStructure;
 
 @DataStructure
 public class Payment {
-    private int id;
+    private Integer id;
 
     private User linkUser;
 
     private boolean isPaid =  false;
 
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

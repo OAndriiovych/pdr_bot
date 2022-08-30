@@ -11,7 +11,9 @@ public class PaymentRepository {
     private static final Map<Long, Payment> repository = new HashMap<>();
 
     public void save(Payment newPayment) {
-        newPayment.setId(IdGenerator.getNextId());
+        if (newPayment.getId() == null) {
+            newPayment.setId(IdGenerator.getNextId());
+        }
         repository.put(newPayment.getLinkUser().getUserId(), newPayment);
     }
 
