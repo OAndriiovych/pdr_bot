@@ -16,6 +16,10 @@ public class UserRepository {
     public User getUserByChatId(long chatId) {
         return repository.get(chatId);
     }
+
+    public void deleteUser(User user) {
+        repository.remove(user.getChatId());
+    }
 }
 
 

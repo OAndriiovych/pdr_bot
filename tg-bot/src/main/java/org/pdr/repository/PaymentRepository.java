@@ -15,8 +15,12 @@ public class PaymentRepository {
         repository.put(newPayment.getLinkUser().getUserId(), newPayment);
     }
 
-    public Payment getPaymentByChatId(User chatId) {
+    public Payment getPaymentByUser(User chatId) {
         return repository.get(chatId.getUserId());
+    }
+
+    public void deletePayment(Payment payment) {
+        repository.remove(payment.getLinkUser().getUserId());
     }
 
     private static class IdGenerator {

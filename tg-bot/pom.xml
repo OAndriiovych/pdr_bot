@@ -28,16 +28,6 @@
         <slf4j-reload4j.version>1.7.36</slf4j-reload4j.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>repository</id>
-            <url>https://github.com/liqpay/sdk-java/raw/repository</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
@@ -80,29 +70,6 @@
                         </manifest>
                     </archive>
                 </configuration>
-            </plugin>
-            <!-- to run test-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-            </plugin>
-
-            <!-- to build flat build-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>${maven-shade-plugin.version}</version>
-                <configuration>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

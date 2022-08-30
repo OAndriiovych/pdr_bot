@@ -10,10 +10,10 @@ import org.pdr.utils.LiqPayUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PaymentModel {
     private final UserRepository userRepository;
-
     private final PaymentRepository paymentRepository;
     private final LiqPayUtil liqPayUtil;
 
@@ -25,7 +25,7 @@ public class PaymentModel {
 
     public List<MessageI> createPayment(long chatId) {
         List<MessageI> mess = new ArrayList<>();
-        User userByChatId = userRepository.getUserByChatId(chatId);
+        User userByChatId = Objects.requireNonNull(userRepository.getUserByChatId(chatId));
         Payment payment = getOrCreatePayment(userByChatId);
         if (payment.isPaid()) {
             mess.add(new TextMessage("Ваша підписка ще активна"));
@@ -37,8 +37,9 @@ public class PaymentModel {
         return mess;
     }
 
+
     private Payment getOrCreatePayment(User user) {
-        Payment payment = paymentRepository.getPaymentByChatId(user);
+        Payment payment = paymentRepository.getPaymentByUser(user);
         if (payment == null) {
             payment = new Payment();
             payment.setLinkUser(user);
