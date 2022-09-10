@@ -1,4 +1,4 @@
-package org.pdr.services;
+package org.pdr.services.realization;
 
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
@@ -7,13 +7,16 @@ import org.pdr.adatpers.messages.TextMessage;
 import org.pdr.entity.User;
 import org.pdr.model.payment.PaymentModel;
 import org.pdr.model.payment.UserModel;
+import org.pdr.services.EnumOfServices;
+import org.pdr.services.Response;
+import org.pdr.services.Service;
 import org.telegram.telegrambots.meta.api.objects.Contact;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class UserRegisteredServ extends Service {
+public class UserRegisteredServ extends Service {
 
     private static final String REG_USER = "Створити аккаунт";
     private static final String HISTORY = "Подивитись історію";
@@ -44,75 +47,70 @@ class UserRegisteredServ extends Service {
         return buttons;
     }
 
-    public static void sendButtons(long chatId) {
-        CHAT_SENDER.execute(new TextMessage("Виберіть щось з наведених пунктів").setButtons(listOfCommands).setChatId(chatId));
+    @Override
+    protected Response processUpdate(InternalUpdate internalUpdate) {
+        Response response;
+        if (internalUpdate.isReply()) {
+            response = processReplyUpdate(internalUpdate);
+        } else {
+            response = processDefaultUpdate(internalUpdate);
+        }
+        return response;
     }
 
     @Override
-    EnumOfServices processUpdate(InternalUpdate internalUpdate) {
-        EnumOfServices nextServ;
-        if (internalUpdate.isReply()) {
-            nextServ = processReplyUpdate(internalUpdate);
-        } else {
-            nextServ = processDefaultUpdate(internalUpdate);
-        }
-        return nextServ;
+    protected MessageI getDefaultMessage() {
+        return new TextMessage("Виберіть щось з наведених пунктів").setButtons(listOfCommands);
     }
 
-    private EnumOfServices processReplyUpdate(InternalUpdate internalUpdate) {
-        EnumOfServices nextServ = EnumOfServices.USER_REGISTERED;
+    private Response processReplyUpdate(InternalUpdate internalUpdate) {
+        Response response = new Response(EnumOfServices.USER_REGISTERED);
         String userAnswer = internalUpdate.getReply().getText();
         long chatId = internalUpdate.getChatId();
         switch (userAnswer) {
             case RequestAccessForPhoneMessage.REQUEST_ACCESS_PHONE:
                 Contact userInfo = internalUpdate.getUserInfo();
-                userModel.registrarUser(new User(chatId, userInfo.getUserId(), userInfo.getPhoneNumber(), userInfo.getFirstName()));
-                CHAT_SENDER.execute(new TextMessage("Ми вас зареєстрували").setChatId(chatId));
-                sendButtons(chatId);
+                User user = new User(chatId, userInfo.getUserId(), userInfo.getPhoneNumber(), userInfo.getFirstName());
+                response.addMessage(userModel.registrarUser(user));
                 break;
             default:
-                sendButtons(chatId);
+                break;
         }
-        return nextServ;
+        return response;
     }
 
-    private EnumOfServices processDefaultUpdate(InternalUpdate internalUpdate) {
-        EnumOfServices nextServ = EnumOfServices.USER_REGISTERED;
+    private Response processDefaultUpdate(InternalUpdate internalUpdate) {
+        Response response = new Response(EnumOfServices.USER_REGISTERED);
         String userAnswer = internalUpdate.getMessageText();
         long chatId = internalUpdate.getChatId();
         switch (userAnswer) {
             case REG_USER:
                 if (userModel.isChatIdConnectToUser(chatId)) {
-                    CHAT_SENDER.execute(new TextMessage("Ви вже зареєстровані в нас").setChatId(chatId));
-                    sendButtons(chatId);
+                    response.addMessage(new TextMessage("Ви вже зареєстровані в нас"));
                 } else {
-                    CHAT_SENDER.execute(new RequestAccessForPhoneMessage());
+                    response.addMessage(new RequestAccessForPhoneMessage());
+                    response.setSendDefaultMessage(false);
                 }
                 break;
             case HISTORY:
-                List<MessageI> historyMessages = userModel.sendHistory(chatId);
-                CHAT_SENDER.execute(historyMessages, chatId);
-                sendButtons(chatId);
+                response.addMessage(userModel.sendHistory(chatId));
                 break;
             case SUBSCRIPTION_DETAIL:
                 //#TODO
-                CHAT_SENDER.execute(new TextMessage("Нам треба гроші").setChatId(chatId));
-                sendButtons(chatId);
+                response.addMessage(new TextMessage("Нам треба гроші"));
                 break;
             case PAY_FOR_SUBSCRIPTION:
                 if (userModel.isChatIdConnectToUser(chatId)) {
-                    List<MessageI> paymentMessages = paymentModel.createPayment(chatId);
-                    CHAT_SENDER.execute(paymentMessages, chatId);
-                    sendButtons(chatId);
+                    response.addMessage(paymentModel.createPayment(chatId));
                 } else {
-                    CHAT_SENDER.execute(new TextMessage("Будь ласка зареєструйтесь спочатку"));
-                    CHAT_SENDER.execute(new RequestAccessForPhoneMessage());
+                    response.addMessage(new TextMessage("Будь ласка зареєструйтесь спочатку"));
+                    response.addMessage(new RequestAccessForPhoneMessage());
                 }
                 break;
             default:
-                sendButtons(chatId);
+                break;
         }
-        return nextServ;
+        return response;
     }
 
 }

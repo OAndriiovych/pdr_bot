@@ -1,20 +1,21 @@
-package org.pdr.services;
+package org.pdr.services.realization;
 
-import org.pdr.Main;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
-import org.pdr.model.quiz.QuizBuilder;
 import org.pdr.model.quiz.Quiz;
+import org.pdr.model.quiz.QuizBuilder;
 import org.pdr.repository.MessageRepository;
 import org.pdr.repository.QuizRepository;
-import org.telegram.telegrambots.meta.api.objects.Message;
+import org.pdr.services.EnumOfServices;
+import org.pdr.services.Response;
+import org.pdr.services.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class QuizCreatorServ extends Service {
+public class QuizCreatorServ extends Service {
     QuizRepository quizRepository = new QuizRepository();
     MessageRepository messageRepository = new MessageRepository();
     QuizBuilder quizBuilder = new QuizBuilder();
@@ -35,30 +36,29 @@ class QuizCreatorServ extends Service {
         return buttons;
     }
 
-    public static void sendButtons(long chatId) {
-        Main.CHAT_SENDER.execute(new TextMessage("Вибери щось").setButtons(listOfCommands).setChatId(chatId));
-    }
-
-
     @Override
-    EnumOfServices processUpdate(InternalUpdate internalUpdate) {
-        EnumOfServices nextServ = EnumOfServices.QUIZ_CREATOR;
+    protected Response processUpdate(InternalUpdate internalUpdate) {
+        Response response = new Response(EnumOfServices.QUIZ_CREATOR);
         String userAnswer = internalUpdate.getMessageText();
         long chatId = internalUpdate.getChatId();
         switch (userAnswer) {
             case REAL_TEST:
                 Quiz ralTest = quizBuilder.createRalTest();
                 quizRepository.saveQuiz(chatId, ralTest);
-                MessageI messageI = ralTest.createNextMessage();
-                messageI.setChatId(chatId);
-                Message execute = CHAT_SENDER.execute(messageI);
-                messageRepository.registrateNewMessageId(chatId, execute.getMessageId());
-                nextServ = EnumOfServices.QUIZ_HANDLER;
+                response.addMessage(ralTest.createNextMessage());
+                response.setCallback(messages -> messages.forEach(execute -> messageRepository.registrateNewMessageId(chatId, execute.getMessageId())));
+                response.setNextServ(EnumOfServices.QUIZ_HANDLER);
+                response.setSendDefaultMessage(false);
                 break;
             default:
-                CHAT_SENDER.execute(new TextMessage("Не зрозумів тебе").setChatId(chatId));
-                sendButtons(chatId);
+                response.addMessage(new TextMessage("Не зрозумів тебе"));
+                break;
         }
-        return nextServ;
+        return response;
+    }
+
+    @Override
+    protected MessageI getDefaultMessage() {
+        return new TextMessage("Вибери щось").setButtons(listOfCommands);
     }
 }

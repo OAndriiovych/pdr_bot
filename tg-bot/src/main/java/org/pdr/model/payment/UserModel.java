@@ -31,7 +31,8 @@ public class UserModel {
         return mess;
     }
 
-    public void registrarUser(User user) {
+    public MessageI registrarUser(User user) {
         userRepository.save(user);
+        return new TextMessage("Ми вас зареєстрували");
     }
 }

@@ -1,13 +1,17 @@
-package org.pdr.services;
+package org.pdr.services.realization;
 
 import org.pdr.adatpers.InternalUpdate;
+import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
+import org.pdr.services.EnumOfServices;
+import org.pdr.services.Response;
+import org.pdr.services.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class MainMenuServ extends Service {
+public class MainMenuServ extends Service {
     private static final String ALL_QUESTION = "Тести";
     private static final String USER_ROOM = "кабінет";
     private static final List<List<String>> listOfCommands = Collections.unmodifiableList(createListOfCommands());
@@ -21,28 +25,25 @@ class MainMenuServ extends Service {
         return buttons;
     }
 
-    public static void sendButtons(long chatId) {
-        CHAT_SENDER.execute(new TextMessage("Виберіть щось з наведених пунктів").setButtons(listOfCommands).setChatId(chatId));
-    }
-
     @Override
-    EnumOfServices processUpdate(InternalUpdate internalUpdate) {
-        EnumOfServices nextServ = EnumOfServices.MAIN_MANU;
+    protected Response processUpdate(InternalUpdate internalUpdate) {
+        Response response = new Response(EnumOfServices.MAIN_MANU);
         String userAnswer = internalUpdate.getMessageText();
         switch (userAnswer) {
             case ALL_QUESTION:
-                nextServ = EnumOfServices.QUIZ_CREATOR;
-                QuizCreatorServ.sendButtons(internalUpdate.getChatId());
+                response.setNextServ(EnumOfServices.QUIZ_CREATOR);
                 break;
             case USER_ROOM:
-                nextServ = EnumOfServices.USER_REGISTERED;
-                UserRegisteredServ.sendButtons(internalUpdate.getChatId());
+                response.setNextServ(EnumOfServices.USER_REGISTERED);
                 break;
             default:
-                sendButtons(internalUpdate.getChatId());
+                break;
         }
-        return nextServ;
+        return response;
     }
 
-
+    @Override
+    protected MessageI getDefaultMessage() {
+        return new TextMessage("Виберіть щось з наведених пунктів").setButtons(listOfCommands);
+    }
 }

@@ -1,12 +1,10 @@
 package org.pdr.services;
 
-import org.pdr.Main;
-import org.pdr.adatpers.ChatSenderI;
 import org.pdr.adatpers.InternalUpdate;
+import org.pdr.adatpers.messages.MessageI;
 
-abstract class Service {
+public abstract class Service {
     protected Service(){}
-    protected static final ChatSenderI CHAT_SENDER = Main.CHAT_SENDER; // only service  Layer can send messages
-
-    abstract EnumOfServices processUpdate(InternalUpdate internalUpdate);
+    protected abstract Response processUpdate(InternalUpdate internalUpdate);
+    protected abstract MessageI getDefaultMessage();
 }
