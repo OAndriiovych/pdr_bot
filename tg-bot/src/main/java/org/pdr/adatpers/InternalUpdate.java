@@ -4,6 +4,8 @@ import org.telegram.telegrambots.meta.api.objects.Contact;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.Optional;
+
 public class InternalUpdate {
     private final Update update;
 
@@ -35,8 +37,8 @@ public class InternalUpdate {
         return update.getMessage().getMessageId();
     }
 
-    public int getCallBackMessageId() {
-        return update.getCallbackQuery().getMessage().getMessageId();
+    public Integer getCallBackMessageId() {
+        return Optional.ofNullable(update.getCallbackQuery()).map(m -> m.getMessage().getMessageId()).orElse(null);
     }
 
     public String getCallbackData() {

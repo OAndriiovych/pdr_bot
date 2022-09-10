@@ -16,11 +16,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class QuizCreatorServ extends Service {
-    QuizRepository quizRepository = new QuizRepository();
-    MessageRepository messageRepository = new MessageRepository();
-    QuizBuilder quizBuilder = new QuizBuilder();
+    private static final QuizRepository quizRepository = new QuizRepository();
+    private static final MessageRepository messageRepository = new MessageRepository();
+    private static final QuizBuilder quizBuilder = new QuizBuilder();
     private static final String REAL_TEST = "реальний тест";
-    private static final String ALL_QUESTION2 = "Тести 2";
+    private static final String FIRST_FAIL = "First fail";
     private static final String ALL_QUESTION3 = "Тести 3";
     private static final List<List<String>> listOfCommands = Collections.unmodifiableList(createListOfCommands());
 
@@ -29,7 +29,7 @@ public class QuizCreatorServ extends Service {
         List<String> firstRow = new ArrayList<>();
         buttons.add(firstRow);
         firstRow.add(REAL_TEST);
-        firstRow.add(ALL_QUESTION2);
+        firstRow.add(FIRST_FAIL);
         List<String> sectRow = new ArrayList<>();
         buttons.add(sectRow);
         sectRow.add(ALL_QUESTION3);
@@ -49,6 +49,9 @@ public class QuizCreatorServ extends Service {
                 response.setCallback(messages -> messages.forEach(execute -> messageRepository.registrateNewMessageId(chatId, execute.getMessageId())));
                 response.setNextServ(EnumOfServices.QUIZ_HANDLER);
                 response.setSendDefaultMessage(false);
+                break;
+            case FIRST_FAIL:
+                response = FirstFailServ.sendFirstQuestion(chatId);
                 break;
             default:
                 response.addMessage(new TextMessage("Не зрозумів тебе"));

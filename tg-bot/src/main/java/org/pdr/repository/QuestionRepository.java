@@ -9,4 +9,6 @@ public interface QuestionRepository {
     Queue<Question> getQuestionsListWithSize(int size);
 
     Queue<Question> getQuestionsListWithSizeAndSubject(int size, double theme);
+
+    Question getRandomQuestion();
 }

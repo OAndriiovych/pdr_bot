@@ -92,6 +92,11 @@ public class QuestionCache implements QuestionRepository {
         return getRandomizedQueue(size, QUESTIONS_BY_THEME.get(QUESTION_THEME_MAPPING.get(theme)));
     }
 
+    @Override
+    public Question getRandomQuestion() {
+        return QUESTIONS_LIST.get(RANDOM.nextInt(QUESTIONS_LIST.size()));
+    }
+
     public static boolean validateThemeNumber(double theme) {
         return QUESTION_THEME_MAPPING.containsKey(theme);
     }

@@ -3,10 +3,7 @@ package org.pdr.services;
 import org.pdr.Main;
 import org.pdr.adatpers.ChatSenderI;
 import org.pdr.adatpers.InternalUpdate;
-import org.pdr.services.realization.MainMenuServ;
-import org.pdr.services.realization.QuizCreatorServ;
-import org.pdr.services.realization.QuizHandlerServ;
-import org.pdr.services.realization.UserRegisteredServ;
+import org.pdr.services.realization.*;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.List;
@@ -16,6 +13,7 @@ public enum EnumOfServices {
     QUIZ_CREATOR(new QuizCreatorServ()),
     QUIZ_HANDLER(new QuizHandlerServ()),
     USER_REGISTERED(new UserRegisteredServ()),
+    FIRST_FAIL(new FirstFailServ()),
     ;
     private final Service service;
     private static final ChatSenderI CHAT_SENDER = Main.CHAT_SENDER; // only service  Layer can send messages
