@@ -2,6 +2,7 @@ package org.pdr.adatpers;
 
 import org.pdr.entity.User;
 import org.pdr.repository.UserRepository;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Contact;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -41,7 +42,7 @@ public class InternalUpdate {
     }
 
     public Integer getCallBackMessageId() {
-        return Optional.ofNullable(update.getCallbackQuery()).map(m -> m.getMessage().getMessageId()).orElse(null);
+        return Optional.ofNullable(update.getCallbackQuery()).map(CallbackQuery::getMessage).map(Message::getMessageId).orElse(null);
     }
 
     public String getCallbackData() {

@@ -21,9 +21,7 @@ public class FirstFailQuiz {
     public List<MessageI> processAnswer(InternalUpdate callbackQuery) {
         List<MessageI> messageIList = new LinkedList<>();
         Integer callBackMessageId = callbackQuery.getCallBackMessageId();
-        if (callBackMessageId == null) {
-            //mb exit??
-        } else if (callBackMessageId != lastMessageId) {
+        if (callBackMessageId == null || callBackMessageId != lastMessageId) {
             return messageIList;
         }
         if (Boolean.parseBoolean(callbackQuery.getCallbackData())) {
