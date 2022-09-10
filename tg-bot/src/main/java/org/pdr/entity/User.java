@@ -7,22 +7,29 @@ public class User {
 
 
     private final long chatId;
-    private final long userId;
+    private long userId;
     private String phone = null;
 
     private String userName = null;
     private boolean isPrem = false;
+    private boolean isUserAnonymous = true;
+
+    public User(long chatId) {
+        this.chatId = chatId;
+    }
 
     public User(long chatId, long userId) {
         this.chatId = chatId;
         this.userId = userId;
     }
 
+
     public User(long chatId, long userId, String phone, String userName) {
         this.chatId = chatId;
         this.userId = userId;
         this.phone = phone;
         this.userName = userName;
+        this.isUserAnonymous = false;
     }
 
     public long getChatId() {
@@ -53,8 +60,11 @@ public class User {
         isPrem = prem;
     }
 
-    public boolean isPrem(){
+    public boolean isPrem() {
         return isPrem;
     }
 
+    public boolean isUserAnonymous() {
+        return isUserAnonymous;
+    }
 }

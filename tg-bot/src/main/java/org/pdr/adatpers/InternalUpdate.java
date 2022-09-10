@@ -1,5 +1,7 @@
 package org.pdr.adatpers;
 
+import org.pdr.entity.User;
+import org.pdr.repository.UserRepository;
 import org.telegram.telegrambots.meta.api.objects.Contact;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -7,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.Optional;
 
 public class InternalUpdate {
+    private static final UserRepository USER_REPOSITORY = new UserRepository();
     private final Update update;
 
     public InternalUpdate(Update update) {
@@ -55,5 +58,10 @@ public class InternalUpdate {
 
     public Message getReply() {
         return update.getMessage().getReplyToMessage();
+    }
+
+    public User getUser() {
+        long chatId = getChatId();
+        return Optional.ofNullable(USER_REPOSITORY.getUserByChatId(chatId)).orElse(new User(chatId));
     }
 }

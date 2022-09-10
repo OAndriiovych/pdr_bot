@@ -3,6 +3,7 @@ package org.pdr.services.realization;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
+import org.pdr.entity.User;
 import org.pdr.model.quiz.Quiz;
 import org.pdr.model.quiz.QuizBuilder;
 import org.pdr.repository.MessageRepository;
@@ -51,7 +52,12 @@ public class QuizCreatorServ extends Service {
                 response.setSendDefaultMessage(false);
                 break;
             case FIRST_FAIL:
-                response = FirstFailServ.sendFirstQuestion(chatId);
+                User user = internalUpdate.getUser();
+                if (user.isPrem()) {
+                    response = FirstFailServ.sendFirstQuestion(chatId);
+                } else {
+                    response.addMessage(new TextMessage("сорі тільки по підписці)"));
+                }
                 break;
             default:
                 response.addMessage(new TextMessage("Не зрозумів тебе"));
