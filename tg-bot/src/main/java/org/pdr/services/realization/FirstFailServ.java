@@ -22,6 +22,7 @@ public class FirstFailServ extends Service {
             response.setNextServ(EnumOfServices.MAIN_MANU);
             firstFailQuizRepository.delete(chatId);
         } else {
+            response.setCallback(messages -> messages.forEach(quiz::setLastMessageId));
             response.setSendDefaultMessage(false);
         }
         return response;
