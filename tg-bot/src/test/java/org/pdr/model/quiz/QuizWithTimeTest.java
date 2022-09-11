@@ -1,7 +1,7 @@
 package org.pdr.model.quiz;
 
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.entity.Question;
@@ -11,7 +11,8 @@ import org.pdr.templates.question.TestQuestion;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuizWithTimeTest {
     public static final int COUNT_OF_QUESTION = 20;
@@ -38,8 +39,7 @@ class QuizWithTimeTest {
     }
 
     @Test
-    @Ignore
-        //to long to work
+    @Disabled("to long to work!")
     void spendAllTimeNoAnswer() {
         list.clear();
         list.add(new TestQuestion());
@@ -56,8 +56,7 @@ class QuizWithTimeTest {
     }
 
     @Test
-    @Ignore
-        //to long to work
+    @Disabled("to long to work!")
     void spendAllTimeOnHalfQuestionsWithTrueAnswers() {
         list = new LinkedList<>();
         int i1 = 4;
