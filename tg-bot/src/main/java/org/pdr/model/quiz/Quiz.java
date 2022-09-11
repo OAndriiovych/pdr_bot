@@ -13,7 +13,7 @@ import java.util.Queue;
 
 public abstract class Quiz {
 
-    MessageRepository messageRepository = new MessageRepository();
+    private static final MessageRepository messageRepository = new MessageRepository();
     private final Queue<Question> queueOfQuestion;
 
     Quiz(Queue<Question> queueOfQuestion) {
