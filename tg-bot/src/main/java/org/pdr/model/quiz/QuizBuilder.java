@@ -1,9 +1,6 @@
 package org.pdr.model.quiz;
 
 import org.pdr.entity.Question;
-import org.pdr.model.quiz.Quiz;
-import org.pdr.model.quiz.QuizWithMarks;
-import org.pdr.model.quiz.QuizWithTime;
 import org.pdr.repository.QuestionCache;
 import org.pdr.repository.QuestionRepository;
 
@@ -48,5 +45,10 @@ public class QuizBuilder {
 
     public Quiz createRalTest() {
         return new QuizWithTime(repository.getQuestionsListWithSize(20), 2);
+    }
+
+    public Quiz createTestByTheme(double theme) {
+        Queue<Question> questionsListWithSizeAndSubject = repository.getQuestionsListWithSizeAndSubject(20, theme);
+        return new QuizWithMarks(questionsListWithSizeAndSubject, questionsListWithSizeAndSubject.size());
     }
 }

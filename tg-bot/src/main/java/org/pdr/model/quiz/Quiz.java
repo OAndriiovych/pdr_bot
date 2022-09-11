@@ -1,5 +1,6 @@
 package org.pdr.model.quiz;
 
+import org.pdr.adatpers.InternalExecuteMessage;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
@@ -52,5 +53,9 @@ public abstract class Quiz {
             }
         }
         return outPutMessages;
+    }
+
+    public void registrateNewMessageCallback(List<InternalExecuteMessage> messages) {
+        messages.forEach(messageRepository::registrateNewMessage);
     }
 }

@@ -13,19 +13,21 @@ import java.util.stream.Collectors;
 
 public abstract class ChatSender extends TelegramLongPollingBot implements ChatSenderI {
     @Override
-    public List<Message> execute(List<MessageI> messageI) {
+    public List<InternalExecuteMessage> execute(List<MessageI> messageI) {
         return messageI.stream().map(this::execute).collect(Collectors.toList());
     }
 
     @Override
-    public Message execute(MessageI message) {
+    public InternalExecuteMessage execute(MessageI message) {
+        Message response;
         try {
-            return tryToSend(message);
+            response = tryToSend(message);
         } catch (TelegramApiException e) {
             //#TODO  add logger
             e.printStackTrace();
-            return new Message();
+            response = new Message();
         }
+        return new InternalExecuteMessage(response);
     }
 
     private Message tryToSend(MessageI message) throws TelegramApiException {
@@ -42,7 +44,7 @@ public abstract class ChatSender extends TelegramLongPollingBot implements ChatS
     }
 
     @Override
-    public List<Message> execute(List<MessageI> messageIList, long chatId) {
+    public List<InternalExecuteMessage> execute(List<MessageI> messageIList, long chatId) {
         messageIList.forEach(messageI -> messageI.setChatId(chatId));
         return execute(messageIList);
     }

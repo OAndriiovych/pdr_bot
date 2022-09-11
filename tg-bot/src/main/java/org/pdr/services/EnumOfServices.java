@@ -2,9 +2,9 @@ package org.pdr.services;
 
 import org.pdr.Main;
 import org.pdr.adatpers.ChatSenderI;
+import org.pdr.adatpers.InternalExecuteMessage;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.services.realization.*;
-import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public enum EnumOfServices {
     public EnumOfServices processUpdate(InternalUpdate internalUpdate) {
         Response response = service.processUpdate(internalUpdate);
         long chatId = internalUpdate.getChatId();
-        List<Message> execute = CHAT_SENDER.execute(response.getMessageIList(), chatId);
+        List<InternalExecuteMessage> execute = CHAT_SENDER.execute(response.getMessageIList(), chatId);
         response.getCallback().accept(execute);
         EnumOfServices nextServ = response.getNextServ();
         if (response.isSendDefaultMessage()) {

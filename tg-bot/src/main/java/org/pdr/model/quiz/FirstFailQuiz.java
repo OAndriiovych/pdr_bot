@@ -1,12 +1,12 @@
 package org.pdr.model.quiz;
 
+import org.pdr.adatpers.InternalExecuteMessage;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
 import org.pdr.entity.Question;
 import org.pdr.repository.QuestionCache;
 import org.pdr.repository.QuestionRepository;
-import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class FirstFailQuiz {
         return isEnd;
     }
 
-    public void setLastMessageId(Message message) {
+    public void setLastMessageId(InternalExecuteMessage message) {
         this.lastMessageId = message.getMessageId();
     }
 }

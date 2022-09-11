@@ -1,8 +1,9 @@
 package org.pdr.services;
 
+import org.pdr.adatpers.InternalExecuteMessage;
 import org.pdr.adatpers.messages.MessageI;
+import org.pdr.model.quiz.Quiz;
 import org.pdr.utils.DataStructure;
-import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +14,7 @@ public class Response {
     private EnumOfServices nextServ;
 
     private boolean sendDefaultMessage = true;
-    private Consumer<List<Message>> callback = a -> {
+    private Consumer<List<InternalExecuteMessage>> callback = a -> {
     };
     private final List<MessageI> messageIList = new LinkedList<>();
 
@@ -45,15 +46,21 @@ public class Response {
         this.sendDefaultMessage = sendDefaultMessage;
     }
 
-    Consumer<List<Message>> getCallback() {
+    Consumer<List<InternalExecuteMessage>> getCallback() {
         return callback;
     }
 
-    public void setCallback(Consumer<List<Message>> callback) {
+    public void setCallback(Consumer<List<InternalExecuteMessage>> callback) {
         this.callback = callback;
     }
 
     List<MessageI> getMessageIList() {
         return messageIList;
+    }
+    public void processQuizForQuizHandlerServ(Quiz quiz) {
+        this.setNextServ(EnumOfServices.QUIZ_HANDLER);
+        this.addMessage(quiz.createNextMessage());
+        this.setCallback(quiz::registrateNewMessageCallback);
+        this.setSendDefaultMessage(false);
     }
 }

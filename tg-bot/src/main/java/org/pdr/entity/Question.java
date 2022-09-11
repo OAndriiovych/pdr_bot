@@ -67,7 +67,8 @@ public class Question {
         for (int i = 1; i < countOfButton; i++) {
             buttons.add(InlineKeyboardButton.builder()
                     .callbackData((i == correct) + "")
-                    .text(i + "")
+//                    .text(i + "")
+                    .text((i == correct)?"test":i + "")
                     .build());
         }
         in.setKeyboard(Collections.singletonList((buttons)));

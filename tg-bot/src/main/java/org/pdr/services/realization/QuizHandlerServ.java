@@ -10,8 +10,8 @@ import org.pdr.services.Response;
 import org.pdr.services.Service;
 
 public class QuizHandlerServ extends Service {
-    MessageRepository messageRepository = new MessageRepository();
-    QuizRepository quizRepository = new QuizRepository();
+    private static final MessageRepository messageRepository = new MessageRepository();
+    private static final QuizRepository quizRepository = new QuizRepository();
 
     @Override
     protected Response processUpdate(InternalUpdate internalUpdate) {
@@ -20,9 +20,7 @@ public class QuizHandlerServ extends Service {
         Quiz quiz = quizRepository.getByChatId(chatId);
         response.addMessage(quiz.processCallbackQuery(internalUpdate));
         if (!quiz.isEnd()) {
-            response.addMessage(quiz.createNextMessage());
-            response.setCallback(messages -> messages.forEach(execute -> messageRepository.registrateNewMessageId(chatId, execute.getMessageId())));
-            response.setSendDefaultMessage(false);
+            response.processQuizForQuizHandlerServ(quiz);
         } else {
             quizRepository.removeQuiz(chatId);
             messageRepository.removeMessage(chatId);

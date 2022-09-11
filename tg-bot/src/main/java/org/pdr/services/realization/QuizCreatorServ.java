@@ -6,7 +6,7 @@ import org.pdr.adatpers.messages.TextMessage;
 import org.pdr.entity.User;
 import org.pdr.model.quiz.Quiz;
 import org.pdr.model.quiz.QuizBuilder;
-import org.pdr.repository.MessageRepository;
+import org.pdr.repository.QuestionCache;
 import org.pdr.repository.QuizRepository;
 import org.pdr.services.EnumOfServices;
 import org.pdr.services.Response;
@@ -18,11 +18,10 @@ import java.util.List;
 
 public class QuizCreatorServ extends Service {
     private static final QuizRepository quizRepository = new QuizRepository();
-    private static final MessageRepository messageRepository = new MessageRepository();
     private static final QuizBuilder quizBuilder = new QuizBuilder();
     private static final String REAL_TEST = "реальний тест";
     private static final String FIRST_FAIL = "First fail";
-    private static final String ALL_QUESTION3 = "Тести 3";
+    private static final String BY_THEMES = "По темам";
     private static final List<List<String>> listOfCommands = Collections.unmodifiableList(createListOfCommands());
 
     private static List<List<String>> createListOfCommands() {
@@ -33,23 +32,47 @@ public class QuizCreatorServ extends Service {
         firstRow.add(FIRST_FAIL);
         List<String> sectRow = new ArrayList<>();
         buttons.add(sectRow);
-        sectRow.add(ALL_QUESTION3);
+        sectRow.add(BY_THEMES);
         return buttons;
     }
 
     @Override
     protected Response processUpdate(InternalUpdate internalUpdate) {
+        Response response;
+        try {
+            response = tryToProcessUserAnswerAsTheme(internalUpdate);
+        } catch (NumberFormatException ignore) {
+            response = processCommandAnswer(internalUpdate);
+        }
+        return response;
+    }
+
+    private Response tryToProcessUserAnswerAsTheme(InternalUpdate internalUpdate) throws NumberFormatException {
+        Response response = new Response(EnumOfServices.QUIZ_CREATOR);
+        String userAnswer = internalUpdate.getMessageText();
+        long chatId = internalUpdate.getChatId();
+        Double aDouble = validateThemeNumber(userAnswer.replace(",", "."));
+        if (aDouble == null) {
+            response.addMessage(new TextMessage("Не можу знайти номер"));
+            response.addMessage(new TextMessage("спробуйте у форматі 1.23"));
+            response.setSendDefaultMessage(false);
+        } else {
+            Quiz realTest = quizBuilder.createTestByTheme(aDouble);
+            quizRepository.saveQuiz(chatId, realTest);
+            response.processQuizForQuizHandlerServ(realTest);
+        }
+        return response;
+    }
+
+    private Response processCommandAnswer(InternalUpdate internalUpdate) {
         Response response = new Response(EnumOfServices.QUIZ_CREATOR);
         String userAnswer = internalUpdate.getMessageText();
         long chatId = internalUpdate.getChatId();
         switch (userAnswer) {
             case REAL_TEST:
-                Quiz ralTest = quizBuilder.createRalTest();
-                quizRepository.saveQuiz(chatId, ralTest);
-                response.addMessage(ralTest.createNextMessage());
-                response.setCallback(messages -> messages.forEach(execute -> messageRepository.registrateNewMessageId(chatId, execute.getMessageId())));
-                response.setNextServ(EnumOfServices.QUIZ_HANDLER);
-                response.setSendDefaultMessage(false);
+                Quiz realTest = quizBuilder.createRalTest();
+                quizRepository.saveQuiz(chatId, realTest);
+                response.processQuizForQuizHandlerServ(realTest);
                 break;
             case FIRST_FAIL:
                 User user = internalUpdate.getUser();
@@ -59,11 +82,20 @@ public class QuizCreatorServ extends Service {
                     response.addMessage(new TextMessage("сорі тільки по підписці)"));
                 }
                 break;
+            case BY_THEMES:
+                response.addMessage(new TextMessage("Надішліть номер теми"));
+                response.addMessage(new TextMessage(QuestionCache.TEXT_VERSION_OF_LIST_THEME));
+                break;
             default:
                 response.addMessage(new TextMessage("Не зрозумів тебе"));
                 break;
         }
         return response;
+    }
+
+    private Double validateThemeNumber(String userAnswer) {
+        double theme = Double.parseDouble(userAnswer);
+        return QuestionCache.validateThemeNumber(theme) ? theme : null;
     }
 
     @Override
