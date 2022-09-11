@@ -3,7 +3,7 @@ package org.pdr.adatpers;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 public class InternalExecuteMessage {
-    private final Message response;
+    protected final Message response;
 
     public InternalExecuteMessage(Message response) {
         this.response = response;

@@ -1,6 +1,7 @@
 package org.pdr.repository;
 
 import org.pdr.adatpers.InternalExecuteMessage;
+import org.pdr.adatpers.InternalUpdate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,9 @@ public class MessageRepository {
     public void registrateNewMessage(InternalExecuteMessage message) {
         registrateNewMessageId(message.getChatId(), message.getMessageId());
     }
-
+    public boolean checkMessageId(InternalUpdate message) {
+        return checkMessageId(message.getChatId(), message.getMessageId());
+    }
     public boolean checkMessageId(long chatId, int messageId) {
         return messageId == lastMessageIdByChatId.get(chatId);
     }

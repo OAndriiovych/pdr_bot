@@ -6,7 +6,6 @@ import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
 import org.pdr.entity.Question;
 import org.pdr.repository.MessageRepository;
-import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +21,7 @@ public abstract class Quiz {
     }
 
     protected List<MessageI> processAnswer(InternalUpdate callbackQuery) {
-        List<MessageI> outPutMessages = new ArrayList<>();
-//        updateLastMessage(callbackQuery.getMessage());
-        return outPutMessages;
-    }
-
-    private void updateLastMessage(Message message) {
-//        EditMessageReplyMarkupMessage editMessageReplyMarkupMessage = new ButtonMessageUpdater(message)
-//                .showAnswer();
-//        sender.execute(editMessageReplyMarkupMessage);
+        return new ArrayList<>();
     }
 
     protected abstract String getResult();
@@ -43,10 +34,9 @@ public abstract class Quiz {
         return queueOfQuestion.poll().createMessage();
     }
 
-    public List<MessageI> processCallbackQuery(InternalUpdate internalUpdate) {
+    public final List<MessageI> processCallbackQuery(InternalUpdate internalUpdate) {
         List<MessageI> outPutMessages = new ArrayList<>();
-        if (messageRepository.checkMessageId(internalUpdate.getChatId(),
-                internalUpdate.getCallBackMessageId())) {
+        if (messageRepository.checkMessageId(internalUpdate)) {
             outPutMessages = processAnswer(internalUpdate);
             if (isEnd()) {
                 outPutMessages.add(new TextMessage(getResult()));
