@@ -13,7 +13,6 @@ public class QuizWithTime extends QuizWithMarks {
 
     private final long totalTime;
     private final long startTime;
-    private long currentTime;
 
     public QuizWithTime(Queue<Question> queueOfQuestion, int numberOfAttempts) {
         super(queueOfQuestion, numberOfAttempts);
@@ -28,18 +27,17 @@ public class QuizWithTime extends QuizWithMarks {
 
     @Override
     protected List<MessageI> processAnswer(InternalUpdate callbackQuery) {
-        currentTime = System.currentTimeMillis();
         List<MessageI> messageIS = super.processAnswer(callbackQuery);
         if (isTimeOut()) {
             messageIS.add(new TextMessage("Відповідь не враховано, час вийшов"));
         } else if (!super.isEnd()) {
-            long minutes = TimeUnit.MILLISECONDS.toMinutes(totalTime + (startTime - currentTime)) + 1;
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(totalTime + (startTime - System.currentTimeMillis())) + 1;
             messageIS.add(new TextMessage("Вам лишилось " + minutes + " хв."));
         }
         return messageIS;
     }
 
     public boolean isTimeOut() {
-        return (currentTime - startTime) > totalTime;
+        return (System.currentTimeMillis() - startTime) > totalTime;
     }
 }
