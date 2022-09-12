@@ -66,6 +66,9 @@ class QuizWithTimeTest {
                 currentTime += TimeUnit.MINUTES.toMillis(i1) + 100;
             }
             sut.processAnswerWithTime(new InternalUpdate(new TrueAnswerCallBackUpdate()), currentTime);
+            if (i == 2) {
+                assertTrue(sut.isEnd());
+            }
             sut.createNextMessage();
         }
 
