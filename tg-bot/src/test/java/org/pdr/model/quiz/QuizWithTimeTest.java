@@ -43,7 +43,7 @@ class QuizWithTimeTest {
         list.add(new TestQuestion());
         QuizWithTime sut = new QuizWithTime(list, 2);
 
-        long currentTime = TimeUnit.MINUTES.toMillis(list.size()) + 100;
+        long currentTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(list.size()) + 100;
         sut.processAnswerWithTime(new InternalUpdate(new TrueAnswerCallBackUpdate()), currentTime);
         assertTrue(sut.isEnd());
 
