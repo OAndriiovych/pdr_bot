@@ -2,6 +2,7 @@ package org.pdr.services;
 
 import org.pdr.adatpers.InternalExecuteMessage;
 import org.pdr.adatpers.messages.MessageI;
+import org.pdr.adatpers.messages.RemoveReplyKeyboardMessage;
 import org.pdr.model.quiz.Quiz;
 import org.pdr.utils.DataStructure;
 
@@ -59,6 +60,7 @@ public class Response {
     }
     public void processQuizForQuizHandlerServ(Quiz quiz) {
         this.setNextServ(EnumOfServices.QUIZ_HANDLER);
+        this.addMessage(new RemoveReplyKeyboardMessage("Починаємо тест"));
         this.addMessage(quiz.createNextMessage());
         this.setCallback(quiz::registrateNewMessageCallback);
         this.setSendDefaultMessage(false);
