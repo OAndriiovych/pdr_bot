@@ -1,7 +1,6 @@
 package org.pdr.model.quiz;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.entity.Question;
@@ -39,24 +38,19 @@ class QuizWithTimeTest {
     }
 
     @Test
-    @Disabled("to long to work!")
     void spendAllTimeNoAnswer() {
         list.clear();
         list.add(new TestQuestion());
         QuizWithTime sut = new QuizWithTime(list, 2);
 
-        try {
-            Thread.sleep(TimeUnit.MINUTES.toMillis(list.size()) + 100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        assertTrue(sut.isTimeOut());
+        long currentTime = TimeUnit.MINUTES.toMillis(list.size()) + 100;
+        sut.processAnswerWithTime(new InternalUpdate(new TrueAnswerCallBackUpdate()), currentTime);
+        assertTrue(sut.isEnd());
 
         assertEquals(String.format("%.2f", 0.0) + "%", sut.getResult());
     }
 
     @Test
-    @Disabled("to long to work!")
     void spendAllTimeOnHalfQuestionsWithTrueAnswers() {
         list = new LinkedList<>();
         int i1 = 4;
@@ -67,17 +61,14 @@ class QuizWithTimeTest {
         QuizWithTime sut = new QuizWithTime(list, 2);
 
         for (int i = 0; i < i1; i++) {
+            long currentTime = System.currentTimeMillis();
             if (i == 2) {
-                try {
-                    Thread.sleep(TimeUnit.MINUTES.toMillis(list.size()) + 100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                break;
+                currentTime += TimeUnit.MINUTES.toMillis(i1) + 100;
             }
-            sut.processAnswer(new InternalUpdate(new TrueAnswerCallBackUpdate()));
+            sut.processAnswerWithTime(new InternalUpdate(new TrueAnswerCallBackUpdate()), currentTime);
             sut.createNextMessage();
         }
+
         assertEquals(String.format("%.2f", 50.0) + "%", sut.getResult());
     }
 }

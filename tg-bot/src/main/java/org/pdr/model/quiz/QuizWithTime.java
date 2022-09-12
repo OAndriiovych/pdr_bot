@@ -5,6 +5,7 @@ import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
 import org.pdr.entity.Question;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +14,7 @@ public class QuizWithTime extends QuizWithMarks {
 
     private final long totalTime;
     private final long startTime;
+    private boolean isEnd = false;
 
     public QuizWithTime(Queue<Question> queueOfQuestion, int numberOfAttempts) {
         super(queueOfQuestion, numberOfAttempts);
@@ -22,22 +24,28 @@ public class QuizWithTime extends QuizWithMarks {
 
     @Override
     public boolean isEnd() {
-        return super.isEnd() || isTimeOut();
+        return isEnd || super.isEnd();
     }
 
     @Override
     protected List<MessageI> processAnswer(InternalUpdate callbackQuery) {
-        List<MessageI> messageIS = super.processAnswer(callbackQuery);
-        if (isTimeOut()) {
-            messageIS.add(new TextMessage("Відповідь не враховано, час вийшов"));
-        } else if (!super.isEnd()) {
-            long minutes = TimeUnit.MILLISECONDS.toMinutes(totalTime + (startTime - System.currentTimeMillis())) + 1;
-            messageIS.add(new TextMessage("Вам лишилось " + minutes + " хв."));
-        }
-        return messageIS;
+        return processAnswerWithTime(callbackQuery, System.currentTimeMillis());
     }
 
-    public boolean isTimeOut() {
-        return (System.currentTimeMillis() - startTime) > totalTime;
+    protected List<MessageI> processAnswerWithTime(InternalUpdate callbackQuery, long currentTime) {
+        List<MessageI> messageIS;
+        long leftTime = currentTime - startTime;
+        if (leftTime > totalTime) {
+            isEnd = true;
+            messageIS = new ArrayList<>();
+            messageIS.add(new TextMessage("Відповідь не враховано, час вийшов"));
+        } else {
+            messageIS = super.processAnswer(callbackQuery);
+            if (!super.isEnd()) {
+                long minutes = TimeUnit.MILLISECONDS.toMinutes(leftTime) + 1;
+                messageIS.add(new TextMessage("Вам лишилось " + minutes + " хв."));
+            }
+        }
+        return messageIS;
     }
 }
