@@ -73,6 +73,7 @@ public class QuizCreatorServ extends Service {
                 Quiz realTest = quizBuilder.createRalTest();
                 quizRepository.saveQuiz(chatId, realTest);
                 response.processQuizForQuizHandlerServ(realTest);
+                response.setSendDefaultMessage(true);
                 break;
             case FIRST_FAIL:
                 User user = internalUpdate.getUser();

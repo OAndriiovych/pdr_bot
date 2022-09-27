@@ -44,6 +44,6 @@ public class MainMenuServ extends Service {
 
     @Override
     protected MessageI getDefaultMessage() {
-        return new TextMessage("Виберіть щось з наведених пунктів").setButtons(listOfCommands);
+        return new TextMessage("Вітаю в головному меню").setButtons(listOfCommands);
     }
 }

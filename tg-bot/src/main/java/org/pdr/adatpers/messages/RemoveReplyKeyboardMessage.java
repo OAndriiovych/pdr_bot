@@ -7,5 +7,6 @@ public class RemoveReplyKeyboardMessage extends TextMessage{
         super(text);
         ReplyKeyboardRemove replyMarkup = new ReplyKeyboardRemove();
         replyMarkup.setRemoveKeyboard(true);
+        setReplyMarkup(replyMarkup);
     }
 }

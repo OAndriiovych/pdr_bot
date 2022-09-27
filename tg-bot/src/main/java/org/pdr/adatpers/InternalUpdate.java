@@ -29,6 +29,10 @@ public class InternalUpdate {
         return chatId;
     }
 
+    public boolean hasText() {
+        return Optional.ofNullable(update.getMessage()).map(Message::hasText).orElse(false);
+    }
+
     public String getMessageText() {
         return update.getMessage().getText();
     }
@@ -54,7 +58,7 @@ public class InternalUpdate {
     }
 
     public boolean isReply() {
-        return update.getMessage().isReply();
+        return Optional.ofNullable(update.getMessage()).map(Message::isReply).orElse(false);
     }
 
     public Message getReply() {

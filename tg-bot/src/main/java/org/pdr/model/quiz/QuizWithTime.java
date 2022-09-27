@@ -34,15 +34,15 @@ public class QuizWithTime extends QuizWithMarks {
 
     protected List<MessageI> processAnswerWithTime(InternalUpdate callbackQuery, long currentTime) {
         List<MessageI> messageIS;
-        long leftTime = currentTime - startTime;
-        if (leftTime > totalTime) {
+        long currentTimeFromStartQuiz = currentTime - startTime;
+        if (currentTimeFromStartQuiz > totalTime) {
             isEnd = true;
             messageIS = new ArrayList<>();
             messageIS.add(new TextMessage("Відповідь не враховано, час вийшов"));
         } else {
             messageIS = super.processAnswer(callbackQuery);
             if (!super.isEnd()) {
-                long minutes = TimeUnit.MILLISECONDS.toMinutes(leftTime) + 1;
+                long minutes = TimeUnit.MILLISECONDS.toMinutes(totalTime - currentTimeFromStartQuiz) + 1;
                 messageIS.add(new TextMessage("Вам лишилось " + minutes + " хв."));
             }
         }

@@ -19,7 +19,7 @@ public class MessageRepository {
     }
 
     public boolean checkMessageId(InternalUpdate message) {
-        int messageId = Optional.ofNullable(message.getCallBackMessageId()).orElse(message.getMessageId());
+        int messageId = Optional.ofNullable(message.getCallBackMessageId()).orElseGet(message::getMessageId);
         return checkMessageId(message.getChatId(), messageId);
     }
 
