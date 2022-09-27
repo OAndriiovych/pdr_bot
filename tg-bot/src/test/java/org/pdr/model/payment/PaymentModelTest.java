@@ -1,5 +1,6 @@
 package org.pdr.model.payment;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.pdr.adatpers.messages.MessageI;
@@ -7,10 +8,20 @@ import org.pdr.entity.Payment;
 import org.pdr.entity.User;
 import org.pdr.repository.PaymentRepository;
 import org.pdr.repository.UserRepository;
+import org.pdr.utils.MyProperties;
 
+import java.io.IOException;
 import java.util.List;
 
 class PaymentModelTest {
+    @BeforeAll
+    static void preloadProp() {
+        try {
+            MyProperties.reloadPropertiesFile("src/test/resources/bot.properties");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     void testSuccessPaymentCreation() {

@@ -1,6 +1,5 @@
 package org.pdr.model.quiz;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.entity.Question;
@@ -10,68 +9,40 @@ import org.pdr.templates.question.TestQuestion;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class QuizWithTimeTest {
     public static final int COUNT_OF_QUESTION = 20;
-    private LinkedList<Question> list = null;
 
-    @BeforeEach
-    void preConf() {
-        list = new LinkedList<>();
+    LinkedList<Question> createTestQuestionList() {
+        LinkedList<Question> list = new LinkedList<>();
         for (int i = 0; i < COUNT_OF_QUESTION; i++) {
             list.add(new TestQuestion());
         }
+        return list;
     }
 
     @Test
-    void successProcessAnswer() {
+    void successProcessAllAnswer() {
+        LinkedList<Question> list = createTestQuestionList();
         QuizWithTime sut = new QuizWithTime(list, 2);
+        long currentTime = System.currentTimeMillis() + 100;
+        InternalUpdate trueAnswer = new InternalUpdate(new TrueAnswerCallBackUpdate());
 
-        while (!sut.isEnd()) {
-            sut.processAnswer(new InternalUpdate(new TrueAnswerCallBackUpdate()));
-            sut.createNextMessage();
-        }
+        sut.processAnswerWithTime(trueAnswer, currentTime);
 
-        assertEquals(String.format("%.2f", 100.0) + "%", sut.getResult());
+        assertFalse(sut.isEnd());
     }
 
     @Test
     void spendAllTimeNoAnswer() {
-        list.clear();
-        list.add(new TestQuestion());
+        LinkedList<Question> list = createTestQuestionList();
         QuizWithTime sut = new QuizWithTime(list, 2);
-
         long currentTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(list.size()) + 100;
-        sut.processAnswerWithTime(new InternalUpdate(new TrueAnswerCallBackUpdate()), currentTime);
+        InternalUpdate trueAnswer = new InternalUpdate(new TrueAnswerCallBackUpdate());
+
+        sut.processAnswerWithTime(trueAnswer, currentTime);
+
         assertTrue(sut.isEnd());
-
-        assertEquals(String.format("%.2f", 0.0) + "%", sut.getResult());
-    }
-
-    @Test
-    void spendAllTimeOnHalfQuestionsWithTrueAnswers() {
-        list = new LinkedList<>();
-        int i1 = 4;
-        for (int i = 0; i < i1; i++) {
-            list.add(new TestQuestion());
-        }
-
-        QuizWithTime sut = new QuizWithTime(list, 2);
-
-        for (int i = 0; i < i1; i++) {
-            long currentTime = System.currentTimeMillis();
-            if (i == 2) {
-                currentTime += TimeUnit.MINUTES.toMillis(i1) + 100;
-            }
-            sut.processAnswerWithTime(new InternalUpdate(new TrueAnswerCallBackUpdate()), currentTime);
-            if (i == 2) {
-                assertTrue(sut.isEnd());
-            }
-            sut.createNextMessage();
-        }
-
-        assertEquals(String.format("%.2f", 50.0) + "%", sut.getResult());
     }
 }
