@@ -5,40 +5,37 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class MyProperties {
-    private static final String PATH = "src/main/resources/bot.properties";
-    private static final Properties PROPERTIES = getProperty();
+    private static Properties properties = null;
 
     private MyProperties() {
     }
 
+    public static void reloadPropertiesFile(String path) throws IOException {
+        Properties properties = new Properties();
+        try (FileInputStream fis = new FileInputStream(path)) {
+            properties.load(fis);
+        }
+        MyProperties.properties = properties;
+    }
+
     public static String getTelegramBotToken() {
-        return PROPERTIES.getProperty("bot.token");
+        return properties.getProperty("bot.token");
     }
 
     public static String getTelegramBotName() {
-        return PROPERTIES.getProperty("bot.name");
+        return properties.getProperty("bot.name");
     }
 
     public static String getLiqPayPublicKey() {
-        return PROPERTIES.getProperty("liqpay.publicKey");
+        return properties.getProperty("liqpay.publicKey");
     }
 
     public static String getLiqPayPrivateKey() {
-        return PROPERTIES.getProperty("liqpay.privateKey");
+        return properties.getProperty("liqpay.privateKey");
     }
 
     public static String getServerUrl() {
-        return PROPERTIES.getProperty("server.url");
+        return properties.getProperty("server.url");
     }
 
-    private static Properties getProperty() {
-        Properties properties = new Properties();
-        try (FileInputStream fis = new FileInputStream(PATH)) {
-            properties.load(fis);
-        } catch (IOException e) {
-            e.printStackTrace();
-            //#TODO add logger
-        }
-        return properties;
-    }
 }

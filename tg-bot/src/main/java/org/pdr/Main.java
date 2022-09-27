@@ -18,6 +18,8 @@ import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import javax.validation.constraints.NotNull;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class Main extends ChatSender {
@@ -31,7 +33,7 @@ public class Main extends ChatSender {
                     new CacheLoader<>() {
                         @Override
                         public EnumOfServices load(@NotNull Long chatId) {
-                            logger.info("new User " + chatId);
+                            logger.info("new User {}", chatId);
                             CHAT_SENDER.execute(new TextMessage("Вітаю в нашому чат боті").setChatId((long) chatId));
                             return EnumOfServices.MAIN_MANU;
                         }
@@ -39,6 +41,12 @@ public class Main extends ChatSender {
 
 
     public static void main(String[] args) {
+        try {
+            loadConf(args);
+        } catch (IOException e) {
+            logger.error("some problem with file properties",e);
+            return;
+        }
         logger.info("Bot started");
         try {
             new TelegramBotsApi(DefaultBotSession.class).registerBot((LongPollingBot) CHAT_SENDER);
@@ -66,5 +74,14 @@ public class Main extends ChatSender {
     @Override
     public String getBotToken() {
         return MyProperties.getTelegramBotToken();
+    }
+
+    private static void loadConf(String[] args) throws IOException {
+        logger.info("loading properties");
+        if(args.length == 0){
+            throw new FileNotFoundException("absent file path properties");
+        }
+        MyProperties.reloadPropertiesFile(args[0]);
+        logger.info("properties loaded ");
     }
 }
