@@ -43,13 +43,9 @@ public class Main extends ChatSender {
     public static void main(String[] args) {
         try {
             loadConf(args);
+            runBot();
         } catch (IOException e) {
-            logger.error("some problem with file properties",e);
-            return;
-        }
-        logger.info("Bot started");
-        try {
-            new TelegramBotsApi(DefaultBotSession.class).registerBot((LongPollingBot) CHAT_SENDER);
+            logger.error("some problem with file properties", e);
         } catch (TelegramApiException e) {
             logger.error("ERROR in Main method", e);
         }
@@ -78,10 +74,15 @@ public class Main extends ChatSender {
 
     private static void loadConf(String[] args) throws IOException {
         logger.info("loading properties");
-        if(args.length == 0){
+        if (args.length == 0) {
             throw new FileNotFoundException("absent file path properties");
         }
         MyProperties.reloadPropertiesFile(args[0]);
         logger.info("properties loaded ");
+    }
+    private static void runBot() throws TelegramApiException {
+        logger.info("starting the bot");
+        new TelegramBotsApi(DefaultBotSession.class).registerBot((LongPollingBot) CHAT_SENDER);
+        logger.info("bot started");
     }
 }
