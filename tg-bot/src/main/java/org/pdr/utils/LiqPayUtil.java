@@ -8,12 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LiqPayUtil extends LiqPay {
-
-    private final String serverUrl;
+    private static final MyProperties instanceMyProperties = MyProperties.getInstance();
 
     public LiqPayUtil() {
-        super(MyProperties.getLiqPayPublicKey(), MyProperties.getLiqPayPrivateKey());
-        this.serverUrl = MyProperties.getServerUrl();
+        super(instanceMyProperties.getLiqPayPublicKey(), instanceMyProperties.getLiqPayPrivateKey());
     }
 
     public String createUrlForPayment(Payment payment) {
@@ -22,7 +20,7 @@ public class LiqPayUtil extends LiqPay {
         params.put("action", "pay");
         params.put("amount", "1488");
         params.put("currency", "USD");
-        params.put("server_url", serverUrl);
+        params.put("server_url", instanceMyProperties.getServerUrl());
         params.put("description", "Марічка оплати будь ласка. ну прошу тебе!");
         params.put("order_id", payment.getId() + "1234");
         params.put("sandbox", "1"); // enable the testing environment and card will NOT charged. If not set will be used property isCnbSandbox()

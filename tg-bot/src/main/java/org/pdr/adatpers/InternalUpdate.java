@@ -19,9 +19,9 @@ public class InternalUpdate {
 
     public long getChatId() {
         long chatId;
-        if (update.hasCallbackQuery()) {
+        if (isCallBack()) {
             chatId = update.getCallbackQuery().getMessage().getChatId();
-        } else if (update.hasMessage()) {
+        } else if (isTextMessage()) {
             chatId = update.getMessage().getChatId();
         } else {
             throw new UnsupportedOperationException("not implemented yet");
@@ -29,7 +29,7 @@ public class InternalUpdate {
         return chatId;
     }
 
-    public boolean hasText() {
+    public boolean isTextMessage() {
         return Optional.ofNullable(update.getMessage()).map(Message::hasText).orElse(false);
     }
 
@@ -37,16 +37,13 @@ public class InternalUpdate {
         return update.getMessage().getText();
     }
 
-    public String getCallBackText() {
-        return update.getCallbackQuery().getMessage().getText();
-    }
 
-    public int getMessageId() {
-        return update.getMessage().getMessageId();
+    public boolean isCallBack() {
+        return Optional.ofNullable(update.getCallbackQuery()).map(CallbackQuery::getMessage).isPresent();
     }
 
     public Integer getCallBackMessageId() {
-        return Optional.ofNullable(update.getCallbackQuery()).map(CallbackQuery::getMessage).map(Message::getMessageId).orElse(null);
+        return update.getCallbackQuery().getMessage().getMessageId();
     }
 
     public String getCallbackData() {

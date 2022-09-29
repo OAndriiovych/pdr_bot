@@ -5,7 +5,6 @@ import org.pdr.adatpers.InternalUpdate;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class MessageRepository {
     private static final Map<Long, Integer> lastMessageIdByChatId = new HashMap<>();
@@ -19,8 +18,7 @@ public class MessageRepository {
     }
 
     public boolean checkMessageId(InternalUpdate message) {
-        int messageId = Optional.ofNullable(message.getCallBackMessageId()).orElseGet(message::getMessageId);
-        return checkMessageId(message.getChatId(), messageId);
+        return checkMessageId(message.getChatId(), message.getCallBackMessageId());
     }
 
     public boolean checkMessageId(long chatId, int messageId) {

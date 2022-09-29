@@ -26,7 +26,7 @@ public class MainMenuServ extends Service {
     }
 
     @Override
-    protected Response processUpdate(InternalUpdate internalUpdate) {
+    protected Response processTextMessage(InternalUpdate internalUpdate) {
         Response response = new Response(EnumOfServices.MAIN_MANU);
         String userAnswer = internalUpdate.getMessageText();
         switch (userAnswer) {

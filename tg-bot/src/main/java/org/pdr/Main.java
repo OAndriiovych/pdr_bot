@@ -64,12 +64,12 @@ public class Main extends ChatSender {
 
     @Override
     public String getBotUsername() {
-        return MyProperties.getTelegramBotName();
+        return MyProperties.getInstance().getTelegramBotName();
     }
 
     @Override
     public String getBotToken() {
-        return MyProperties.getTelegramBotToken();
+        return MyProperties.getInstance().getTelegramBotToken();
     }
 
     private static void loadConf(String[] args) throws IOException {

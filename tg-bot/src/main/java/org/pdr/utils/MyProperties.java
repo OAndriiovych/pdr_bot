@@ -5,9 +5,22 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class MyProperties {
+
+    private static final MyProperties inst = new MyProperties();
+    private static final String DEFAULT_PATH = "src/main/resources/bot.properties";
     private static Properties properties = null;
 
     private MyProperties() {
+    }
+
+    public static MyProperties getInstance() {
+        if (properties == null) {
+            try {
+                reloadPropertiesFile(DEFAULT_PATH);
+            } catch (IOException ignore) {
+            }
+        }
+        return inst;
     }
 
     public static void reloadPropertiesFile(String path) throws IOException {
@@ -18,23 +31,23 @@ public class MyProperties {
         MyProperties.properties = properties;
     }
 
-    public static String getTelegramBotToken() {
+    public String getTelegramBotToken() {
         return properties.getProperty("bot.token");
     }
 
-    public static String getTelegramBotName() {
+    public String getTelegramBotName() {
         return properties.getProperty("bot.name");
     }
 
-    public static String getLiqPayPublicKey() {
+    public String getLiqPayPublicKey() {
         return properties.getProperty("liqpay.publicKey");
     }
 
-    public static String getLiqPayPrivateKey() {
+    public String getLiqPayPrivateKey() {
         return properties.getProperty("liqpay.privateKey");
     }
 
-    public static String getServerUrl() {
+    public String getServerUrl() {
         return properties.getProperty("server.url");
     }
 

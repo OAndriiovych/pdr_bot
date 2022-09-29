@@ -32,13 +32,7 @@ public class QuizHandlerServ extends Service {
     }
 
     @Override
-    protected Response processUpdate(InternalUpdate internalUpdate) {
-        return internalUpdate.hasText() ?
-                processMessageTextUpdate(internalUpdate)
-                : processUserAnswer(internalUpdate);
-    }
-
-    private Response processMessageTextUpdate(InternalUpdate internalUpdate) {
+    protected Response processTextMessage(InternalUpdate internalUpdate) {
         Response response = new Response(EnumOfServices.QUIZ_HANDLER);
         String userAnswer = internalUpdate.getMessageText();
         switch (userAnswer) {
@@ -54,7 +48,8 @@ public class QuizHandlerServ extends Service {
         return response;
     }
 
-    private Response processUserAnswer(InternalUpdate internalUpdate) {
+    @Override
+    protected Response processCallbackQuery(InternalUpdate internalUpdate) {
         Response response = new Response(EnumOfServices.QUIZ_HANDLER);
         long chatId = internalUpdate.getChatId();
         Quiz quiz = quizRepository.getByChatId(chatId);

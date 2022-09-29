@@ -10,4 +10,7 @@ public class SimpleCallBackUpdate extends Update {
         setCallbackQuery(new SimpleCallBackQuery());
     }
 
+    public void setMessageId(Integer messageId) {
+        getCallbackQuery().getMessage().setMessageId(messageId);
+    }
 }

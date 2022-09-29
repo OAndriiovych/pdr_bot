@@ -37,7 +37,7 @@ public class QuizCreatorServ extends Service {
     }
 
     @Override
-    protected Response processUpdate(InternalUpdate internalUpdate) {
+    protected Response processTextMessage(InternalUpdate internalUpdate) {
         Response response;
         try {
             response = tryToProcessUserAnswerAsTheme(internalUpdate);

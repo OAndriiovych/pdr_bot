@@ -8,5 +8,6 @@ public class SimpleCallBackQuery extends CallbackQuery {
         setId("123456789");
         setFrom(new SimpleUser());
         setChatInstance("-123456789");
+        setMessage(new SimpleMessage());
     }
 }

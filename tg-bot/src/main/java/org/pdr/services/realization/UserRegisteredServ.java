@@ -48,22 +48,12 @@ public class UserRegisteredServ extends Service {
     }
 
     @Override
-    protected Response processUpdate(InternalUpdate internalUpdate) {
-        Response response;
-        if (internalUpdate.isReply()) {
-            response = processReplyUpdate(internalUpdate);
-        } else {
-            response = processDefaultUpdate(internalUpdate);
-        }
-        return response;
-    }
-
-    @Override
     protected MessageI getDefaultMessage() {
         return new TextMessage("Виберіть щось з наведених пунктів").setButtons(listOfCommands);
     }
 
-    private Response processReplyUpdate(InternalUpdate internalUpdate) {
+    @Override
+    protected Response processReply(InternalUpdate internalUpdate) {
         Response response = new Response(EnumOfServices.USER_REGISTERED);
         String userAnswer = internalUpdate.getReply().getText();
         long chatId = internalUpdate.getChatId();
@@ -79,7 +69,8 @@ public class UserRegisteredServ extends Service {
         return response;
     }
 
-    private Response processDefaultUpdate(InternalUpdate internalUpdate) {
+    @Override
+    protected Response processTextMessage(InternalUpdate internalUpdate) {
         Response response = new Response(EnumOfServices.USER_REGISTERED);
         String userAnswer = internalUpdate.getMessageText();
         long chatId = internalUpdate.getChatId();

@@ -6,6 +6,7 @@ import org.pdr.adatpers.InternalExecuteMessage;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.services.realization.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 public enum EnumOfServices {
@@ -22,6 +23,12 @@ public enum EnumOfServices {
         this.service = service;
     }
 
+    public static EnumOfServices valueOf(Service inputService) {
+        return Arrays.stream(EnumOfServices.values())
+                .filter(enumOfServices -> enumOfServices.service == inputService)
+                .findFirst().orElse(null);
+    }
+
     public EnumOfServices processUpdate(InternalUpdate internalUpdate) {
         Response response = service.processUpdate(internalUpdate);
         long chatId = internalUpdate.getChatId();
@@ -33,4 +40,5 @@ public enum EnumOfServices {
         }
         return nextServ;
     }
+
 }

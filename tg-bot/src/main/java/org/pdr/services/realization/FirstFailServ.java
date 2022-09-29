@@ -13,10 +13,14 @@ public class FirstFailServ extends Service {
     private static final FirstFailQuizRepository firstFailQuizRepository = new FirstFailQuizRepository();
 
     @Override
-    protected Response processUpdate(InternalUpdate internalUpdate) {
+    protected Response processCallbackQuery(InternalUpdate internalUpdate) {
         long chatId = internalUpdate.getChatId();
         FirstFailQuiz quiz = firstFailQuizRepository.getModelByChatId(chatId);
         Response response = new Response(EnumOfServices.FIRST_FAIL);
+        if (quiz == null) {
+            //#TODO add logger
+            return response;
+        }
         response.addMessage(quiz.processAnswer(internalUpdate));
         if (quiz.isEnd()) {
             response.setNextServ(EnumOfServices.MAIN_MANU);

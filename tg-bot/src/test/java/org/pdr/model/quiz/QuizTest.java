@@ -1,14 +1,11 @@
 package org.pdr.model.quiz;
 
 import org.junit.jupiter.api.Test;
-import org.pdr.adatpers.InternalExecuteMessage;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
 import org.pdr.entity.Question;
-import org.pdr.templates.messages.SimpleCallBackQuery;
-import org.pdr.templates.messages.SimpleMessage;
 import org.pdr.templates.messages.executed.SimpleExecuteMessage;
-import org.pdr.templates.messages.updates.SimpleTextUpdate;
+import org.pdr.templates.messages.updates.SimpleCallBackUpdate;
 import org.pdr.templates.question.TestQuestion;
 
 import java.util.LinkedList;
@@ -23,7 +20,7 @@ class QuizTest {
     void successProcessCallbackQuery() {
         LinkedList<Question> list = new LinkedList<>();
         SimpleImpQuiz quiz = new SimpleImpQuiz(list);
-        SimpleTextUpdate update = new SimpleTextUpdate();
+        SimpleCallBackUpdate update = new SimpleCallBackUpdate();
         SimpleExecuteMessage executeMessage = new SimpleExecuteMessage();
         quiz.registrateNewMessageCallback(List.of(executeMessage));
 
@@ -47,7 +44,7 @@ class QuizTest {
     void processCallbackQueryInCorrectMessage() {
         LinkedList<Question> list = new LinkedList<>();
         SimpleImpQuiz quiz = new SimpleImpQuiz(list);
-        SimpleTextUpdate update = new SimpleTextUpdate();
+        SimpleCallBackUpdate update = new SimpleCallBackUpdate();
         SimpleExecuteMessage executeMessage = new SimpleExecuteMessage();
         quiz.registrateNewMessageCallback(List.of(executeMessage));
 
