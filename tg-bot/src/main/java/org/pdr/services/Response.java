@@ -2,7 +2,6 @@ package org.pdr.services;
 
 import org.pdr.adatpers.InternalExecuteMessage;
 import org.pdr.adatpers.messages.MessageI;
-import org.pdr.model.quiz.Quiz;
 import org.pdr.utils.DataStructure;
 
 import java.util.LinkedList;
@@ -56,11 +55,5 @@ public class Response {
 
     List<MessageI> getMessageIList() {
         return messageIList;
-    }
-    public void processQuizForQuizHandlerServ(Quiz quiz) {
-        this.setNextServ(EnumOfServices.QUIZ_HANDLER);
-        this.addMessage(quiz.createNextMessage());
-        this.setCallback(quiz::registrateNewMessageCallback);
-        this.setSendDefaultMessage(false);
     }
 }
