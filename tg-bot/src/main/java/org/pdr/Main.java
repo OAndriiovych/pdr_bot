@@ -38,7 +38,6 @@ public class Main extends ChatSender {
                             return EnumOfServices.MAIN_MANU;
                         }
                     });
-//sdsd
 
     public static void main(String[] args) {
         try {
