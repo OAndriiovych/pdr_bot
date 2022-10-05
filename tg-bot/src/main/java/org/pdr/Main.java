@@ -39,7 +39,6 @@ public class Main extends ChatSender {
                         }
                     });
 
-
     public static void main(String[] args) {
         try {
             loadConf(args);

@@ -4,7 +4,6 @@ import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
 import org.pdr.model.quiz.Quiz;
-import org.pdr.repository.MessageRepository;
 import org.pdr.repository.QuizRepository;
 import org.pdr.services.EnumOfServices;
 import org.pdr.services.Response;
@@ -19,7 +18,6 @@ public class QuizHandlerServ extends Service {
     private static final String END_OF_TEST = "закінчити тест";
 
     private static final List<List<String>> listOfCommands = Collections.unmodifiableList(createListOfCommands());
-    private static final MessageRepository messageRepository = new MessageRepository();
     private static final QuizRepository quizRepository = new QuizRepository();
 
     private static List<List<String>> createListOfCommands() {
@@ -36,6 +34,14 @@ public class QuizHandlerServ extends Service {
         Response response = new Response(EnumOfServices.QUIZ_HANDLER);
         String userAnswer = internalUpdate.getMessageText();
         switch (userAnswer) {
+            case QuizCreatorServ.READY:
+                long chatId = internalUpdate.getChatId();
+                Quiz quiz = quizRepository.getByChatId(chatId);
+                response.addMessage(new TextMessage("Починаємо тест").setButtons(listOfCommands));
+                response.addMessage(quiz.createNextMessage());
+                response.setCallback(quiz::registrateNewMessageCallback);
+                response.setSendDefaultMessage(false);
+                break;
             case SAVE_QUESTION:
                 //#TODO
                 break;
@@ -53,19 +59,21 @@ public class QuizHandlerServ extends Service {
         Response response = new Response(EnumOfServices.QUIZ_HANDLER);
         long chatId = internalUpdate.getChatId();
         Quiz quiz = quizRepository.getByChatId(chatId);
-        response.addMessage(quiz.processCallbackQuery(internalUpdate));
-        if (!quiz.isEnd()) {
-            response.processQuizForQuizHandlerServ(quiz);
-        } else {
+        if (quiz.isEnd()) {
             quizRepository.removeQuiz(chatId);
-            messageRepository.removeMessage(chatId);
             response.setNextServ(EnumOfServices.MAIN_MANU);
+        } else if (quiz.isValidMassage(internalUpdate)) {
+            response.addMessage(quiz.processCallbackQuery(internalUpdate));
+            response.setCallback(quiz::registrateNewMessageCallback);
+            response.setSendDefaultMessage(false);
+        } else {
+            response.setSendDefaultMessage(false);
         }
         return response;
     }
 
     @Override
     protected MessageI getDefaultMessage() {
-        return new TextMessage("Починаємо тест").setButtons(listOfCommands);
+        throw new UnsupportedOperationException();
     }
 }

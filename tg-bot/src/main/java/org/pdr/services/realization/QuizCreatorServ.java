@@ -17,12 +17,22 @@ import java.util.Collections;
 import java.util.List;
 
 public class QuizCreatorServ extends Service {
+    public static final String READY = "Готовий";
     private static final QuizRepository quizRepository = new QuizRepository();
     private static final QuizBuilder quizBuilder = new QuizBuilder();
     private static final String REAL_TEST = "реальний тест";
     private static final String FIRST_FAIL = "First fail";
     private static final String BY_THEMES = "По темам";
     private static final List<List<String>> listOfCommands = Collections.unmodifiableList(createListOfCommands());
+    private static final List<List<String>> readyCommand = Collections.unmodifiableList(createReadyCommand());
+
+    private static List<List<String>> createReadyCommand() {
+        List<List<String>> buttons = new ArrayList<>();
+        List<String> firstRow = new ArrayList<>();
+        buttons.add(firstRow);
+        firstRow.add(READY);
+        return buttons;
+    }
 
     private static List<List<String>> createListOfCommands() {
         List<List<String>> buttons = new ArrayList<>();
@@ -59,7 +69,7 @@ public class QuizCreatorServ extends Service {
         } else {
             Quiz realTest = quizBuilder.createTestByTheme(aDouble);
             quizRepository.saveQuiz(chatId, realTest);
-            response.processQuizForQuizHandlerServ(realTest);
+            addReadyButton(response);
         }
         return response;
     }
@@ -72,8 +82,7 @@ public class QuizCreatorServ extends Service {
             case REAL_TEST:
                 Quiz realTest = quizBuilder.createRalTest();
                 quizRepository.saveQuiz(chatId, realTest);
-                response.processQuizForQuizHandlerServ(realTest);
-                response.setSendDefaultMessage(true);
+                addReadyButton(response);
                 break;
             case FIRST_FAIL:
                 User user = internalUpdate.getUser();
@@ -102,5 +111,11 @@ public class QuizCreatorServ extends Service {
     @Override
     protected MessageI getDefaultMessage() {
         return new TextMessage("Вибери щось").setButtons(listOfCommands);
+    }
+
+    public void addReadyButton(Response response) {
+        response.setNextServ(EnumOfServices.QUIZ_HANDLER);
+        response.addMessage(new TextMessage("Готовий?").setButtons(readyCommand));
+        response.setSendDefaultMessage(false);
     }
 }
