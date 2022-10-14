@@ -8,6 +8,7 @@ import org.pdr.templates.messages.executed.SimpleExecuteMessage;
 import org.pdr.templates.messages.updates.SimpleCallBackUpdate;
 import org.pdr.templates.question.TestQuestion;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -28,7 +29,6 @@ class QuizTest {
         for (int i = 0; i < count; i++) {
             list.add(new TestQuestion());
             quiz.processCallbackQuery(new InternalUpdate(update));
-            assertFalse(quiz.isEnd());
             list.poll();
             executeMessage.setMessageId(i);
             update.setMessageId(i);
@@ -37,7 +37,6 @@ class QuizTest {
         }
 
         assertTrue(quiz.isEnd());
-        assertEquals(count, quiz.count);
     }
 
     @Test
@@ -55,7 +54,6 @@ class QuizTest {
                 update.setMessageId(-1);
             }
             quiz.processCallbackQuery(new InternalUpdate(update));
-            assertFalse(quiz.isEnd());
             list.poll();
             executeMessage.setMessageId(i);
             update.setMessageId(i);
@@ -64,7 +62,6 @@ class QuizTest {
         }
 
         assertTrue(quiz.isEnd());
-        assertEquals(count - 1, quiz.count);
     }
 
     class SimpleImpQuiz extends Quiz {
@@ -77,7 +74,7 @@ class QuizTest {
         @Override
         protected List<MessageI> processAnswer(InternalUpdate callbackQuery) {
             count++;
-            return null;
+            return new ArrayList<>();
         }
 
         @Override

@@ -59,6 +59,9 @@ public class QuizHandlerServ extends Service {
         Response response = new Response(EnumOfServices.QUIZ_HANDLER);
         long chatId = internalUpdate.getChatId();
         Quiz quiz = quizRepository.getByChatId(chatId);
+        if (quiz == null) {
+            return response;
+        }
         if (quiz.isEnd()) {
             quizRepository.removeQuiz(chatId);
             response.setNextServ(EnumOfServices.MAIN_MANU);
