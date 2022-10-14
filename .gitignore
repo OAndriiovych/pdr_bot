@@ -29,4 +29,5 @@ src/main/resources/bot.properties
 *.iml
 /aws-module/LiqpayHandler/.aws-sam/*
 /tg-bot/src/main/resources/bot.properties
+tg-bot/src/main/resources/bot.properties
 /tg-bot/src/test/resources/bot.properties
