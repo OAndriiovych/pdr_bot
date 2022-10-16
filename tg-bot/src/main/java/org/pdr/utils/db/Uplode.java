@@ -35,16 +35,17 @@ public class Uplode {
     private static void upQ() {
         try (Connection connection = DBManager.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO questions (theme_id,caption,url,countofbutton,correctbutton) values (?,?,?,?,?)");
-            Map<Integer, List<Question>> questionsByTheme = QuestionCache.QUESTIONS_BY_THEME;
-            Set<Map.Entry<Integer, List<Question>>> entries = questionsByTheme.entrySet();
+//            Map<Integer, List<Question>> questionsByTheme = QuestionCache.QUESTIONS_BY_THEME;
+            Set<Map.Entry<Integer, List<Question>>> entries = null;
+//            Set<Map.Entry<Integer, List<Question>>> entries = questionsByTheme.entrySet();
             for (Map.Entry<Integer, List<Question>> entry : entries) {
                 Integer th = entry.getKey();
                 for (Question v : entry.getValue()) {
                     preparedStatement.setInt(1, th);
                     preparedStatement.setString(2, v.caption);
-                    preparedStatement.setString(3, v.url);
-                    preparedStatement.setInt(4, v.countOfButton);
-                    preparedStatement.setInt(5, v.correctButton);
+//                    preparedStatement.setString(3, v.url);
+//                    preparedStatement.setInt(4, v.countOfButton);
+//                    preparedStatement.setInt(5, v.correctButton);
                     preparedStatement.addBatch();
                 }
             }
