@@ -10,19 +10,13 @@ import java.sql.*;
 public class DBManager {
     static {
         try {
-            MyProperties.reloadPropertiesFile("tg-bot/src/main/resources/bot.properties");
-        } catch (IOException e) {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static Connection getConnection() {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
         try {
             return DriverManager.getConnection(MyProperties.getDBUrl(), MyProperties.getDBUserName(),
                     MyProperties.getDBPass());
