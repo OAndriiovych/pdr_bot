@@ -9,20 +9,14 @@ import java.lang.reflect.Field;
 
 class EnumOfServicesTest {
 
-    @Test
+
     void testAllServiceFaultTolerance() throws NoSuchFieldException, IllegalAccessException {
         Field privateField = EnumOfServices.class.getDeclaredField("service");
         privateField.setAccessible(true);
         for (EnumOfServices sut : EnumOfServices.values()) {
             Service service = (Service) privateField.get(sut);
-            try {
-                service.processUpdate(new InternalUpdate(new SimpleTextUpdate()));
-                service.processUpdate(new InternalUpdate(new SimpleCallBackUpdate()));
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println(sut);
-            }
+            service.processUpdate(new InternalUpdate(new SimpleTextUpdate()));
+            service.processUpdate(new InternalUpdate(new SimpleCallBackUpdate()));
         }
     }
-
 }
