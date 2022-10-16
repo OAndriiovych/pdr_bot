@@ -5,18 +5,26 @@ import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
 import org.pdr.entity.Question;
-import org.pdr.repository.QuestionCache;
+import org.pdr.repository.QuestionCacheDB;
 import org.pdr.repository.QuestionRepository;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class FirstFailQuiz {
-    private static final QuestionRepository repository = new QuestionCache();
+
+    private final QuestionRepository repository;
     private int countCorrectAnswer = 0;
     private boolean isEnd = false;
-
     private int lastMessageId = 0;
+
+    public FirstFailQuiz() {
+        this.repository = new QuestionCacheDB();
+    }
+
+    public FirstFailQuiz(QuestionRepository repository) {
+        this.repository = repository;
+    }
 
     public List<MessageI> processAnswer(InternalUpdate callbackQuery) {
         List<MessageI> messageIList = new LinkedList<>();

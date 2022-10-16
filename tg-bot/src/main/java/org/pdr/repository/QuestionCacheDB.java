@@ -3,87 +3,87 @@ package org.pdr.repository;
 import org.pdr.entity.Question;
 import org.pdr.utils.db.DBManager;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class QuestionCacheDB implements QuestionRepository {
-    private final List<Question> TOTAL_QUESTION_LIST = Collections.unmodifiableList(getQuestionMapByTheme().values()
-            .stream().flatMap(Collection::stream).collect(Collectors.toList()));
-    private static final Map<Double, Integer> QUESTION_THEME_MAPPING = Collections.unmodifiableMap(getQuestionsMapping());
+
+    private static final String SELECT_FROM_QUESTIONS = "SELECT * FROM questions q ORDER BY theme_id";
+    private static final String SELECT_FROM_THEME = "SELECT * FROM theme ORDER BY theme_id";
     private static final Random RANDOM = new Random();
+    private static Map<Double, List<Question>> questionByThemeId;
+    private static List<Question> questionList;
+    private static String textVersionOfListTheme;
 
-
-    // Вроді працює
-    public static void main(String[] args) {
-        Map<Integer, List<Question>> ss = new HashMap<>();
-        ss = new QuestionCacheDB().getQuestionMapByTheme();
-        System.out.println(new QuestionCacheDB().TOTAL_QUESTION_LIST.size());
+    static {
+        load();
     }
 
-    private static Map<Double, Integer> getQuestionsMapping() {
-        Map<Double, Integer> result = new HashMap<>();
-        try {
-            FileInputStream fis = new FileInputStream("tg-bot/src/main/resources/themes.txt");
-            Scanner sc = new Scanner(fis);
-            int i = 1;
-            while (sc.hasNextLine()) {
-                String s = sc.nextLine();
-                String substring = s.substring(0, s.indexOf(" "));
+    private static void load() {
+        try (Connection connection = DBManager.getConnection()) {
+            Map<Integer, List<Question>> questions = loadQuestion(connection);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_FROM_THEME);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Map<Double, List<Question>> questionByThemeId = new HashMap<>();
+            StringBuilder stringBuilder = new StringBuilder();
+            while (resultSet.next()) {
+                int theme_id = resultSet.getInt("theme_id");
+                String theme = resultSet.getString("caption");
+                stringBuilder.append(theme).append("\n");
+                String substring = theme.substring(0, theme.indexOf(" "));
                 double d = Double.parseDouble(substring.substring(0, substring.length() - 1));
-                result.put(d, i);
-                i++;
+                questionByThemeId.put(d, questions.get(theme_id));
             }
-            sc.close();
-        } catch (IOException e) {
+            synchronized (QuestionCacheDB.class) {
+                QuestionCacheDB.questionByThemeId = questionByThemeId;
+                textVersionOfListTheme = stringBuilder.toString();
+                questionList = questionByThemeId.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static Map<Integer, List<Question>> loadQuestion(Connection connection) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(SELECT_FROM_QUESTIONS);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        Map<Integer, List<Question>> result = new HashMap<>();
+        while (resultSet.next()) {
+            int theme_id = resultSet.getInt("theme_id");
+            List<Question> orDefault = result.computeIfAbsent(theme_id, ArrayList::new);
+            orDefault.add(new Question(resultSet));
         }
         return result;
     }
 
     @Override
     public Queue<Question> getQuestionsListWithSize(int size) {
-        return getRandomizedQueue(size,TOTAL_QUESTION_LIST);
+        return getRandomizedQueue(size, questionList);
     }
 
     @Override
     public Queue<Question> getQuestionsListWithSizeAndSubject(int size, double theme) {
-        return getRandomizedQueue(size,getQuestionMapByTheme().get(QUESTION_THEME_MAPPING.get(theme)));
+        return getRandomizedQueue(size, questionByThemeId.get(theme));
     }
 
     @Override
     public Question getRandomQuestion() {
-        return TOTAL_QUESTION_LIST.get(RANDOM.nextInt(TOTAL_QUESTION_LIST.size()));
+        return questionList.get(RANDOM.nextInt(questionList.size()));
+
     }
 
-    private Map<Integer, List<Question>> getQuestionMapByTheme() {
-        Map<Integer, List<Question>> questionByTheme = new HashMap<>();
-        Connection connection = DBManager.getConnection();
-        ResultSet resultSet = null;
-        try {
-            Statement statement = connection.createStatement();
-            for (int i = 1; i < 76; i++) {  // Хардкод цифри=( можна взяти як максимальну айдішку з ДБ, або к-сть строк з Themes, або к-сть файлів з джейсонів
-                List<Question> questionList = new LinkedList<>();
-                resultSet = statement.executeQuery("SELECT * FROM questions WHERE theme_id =" + i);
-                while (resultSet.next()) {
-                    questionList.add(new Question(resultSet.getString(4), resultSet.getInt(6),
-                            resultSet.getString(3), resultSet.getInt(5)));
-                }
-                questionByTheme.put(i, questionList);
+    @Override
+    public String getAllTheme() {
+        return textVersionOfListTheme;
+    }
 
-            }
-            resultSet.close();
-            statement.close();
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return questionByTheme;
+    @Override
+    public boolean isThemeValid(double theme) {
+        return questionByThemeId.containsKey(theme);
     }
 
     private static Queue<Question> getRandomizedQueue(int size, List<Question> list) {
@@ -99,6 +99,4 @@ public class QuestionCacheDB implements QuestionRepository {
         }
         return questions;
     }
-
-
 }

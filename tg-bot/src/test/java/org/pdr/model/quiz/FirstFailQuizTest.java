@@ -1,14 +1,17 @@
 package org.pdr.model.quiz;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.pdr.adatpers.InternalExecuteMessage;
 import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
 import org.pdr.adatpers.messages.TextMessage;
+import org.pdr.repository.QuestionRepository;
 import org.pdr.templates.messages.SimpleMessage;
 import org.pdr.templates.messages.updates.FalseAnswerCallBackUpdate;
 import org.pdr.templates.messages.updates.SimpleTextUpdate;
 import org.pdr.templates.messages.updates.TrueAnswerCallBackUpdate;
+import org.pdr.templates.question.TestQuestion;
 
 import java.util.List;
 
@@ -16,38 +19,41 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FirstFailQuizTest {
 
-
     @Test
     void successProcessAnswer() {
-        FirstFailQuiz quiz = new FirstFailQuiz();
+        QuestionRepository mockQuestionRepository = Mockito.spy(QuestionRepository.class);
+        Mockito.when(mockQuestionRepository.getRandomQuestion()).thenReturn(new TestQuestion());
+        FirstFailQuiz quiz = new FirstFailQuiz(mockQuestionRepository);
         TrueAnswerCallBackUpdate update = new TrueAnswerCallBackUpdate();
         InternalUpdate internalUpdate = new InternalUpdate(update);
         SimpleMessage message = (SimpleMessage) update.getCallbackQuery().getMessage();
         quiz.setLastMessageId(message.toInternalExecuteMessage());
 
-        List<MessageI> messageIList = quiz.processAnswer(internalUpdate);
+        quiz.processAnswer(internalUpdate);
 
-        assertEquals(2, messageIList.size());
         assertFalse(quiz.isEnd());
     }
 
     @Test
     void processAnswerWrongAnswer() {
-        FirstFailQuiz quiz = new FirstFailQuiz();
+        QuestionRepository mockQuestionRepository = Mockito.spy(QuestionRepository.class);
+        Mockito.when(mockQuestionRepository.getRandomQuestion()).thenReturn(new TestQuestion());
+        FirstFailQuiz quiz = new FirstFailQuiz(mockQuestionRepository);
         FalseAnswerCallBackUpdate update = new FalseAnswerCallBackUpdate();
         InternalUpdate internalUpdate = new InternalUpdate(update);
         SimpleMessage message = (SimpleMessage) update.getCallbackQuery().getMessage();
         quiz.setLastMessageId(message.toInternalExecuteMessage());
 
-        List<MessageI> messageIList = quiz.processAnswer(internalUpdate);
+        quiz.processAnswer(internalUpdate);
 
-        assertNotEquals(2, messageIList.size());
         assertTrue(quiz.isEnd());
     }
 
     @Test
     void processTextMessage() {
-        FirstFailQuiz quiz = new FirstFailQuiz();
+        QuestionRepository mockQuestionRepository = Mockito.spy(QuestionRepository.class);
+        Mockito.when(mockQuestionRepository.getRandomQuestion()).thenReturn(new TestQuestion());
+        FirstFailQuiz quiz = new FirstFailQuiz(mockQuestionRepository);
 
         List<MessageI> messageIList = quiz.processAnswer(new InternalUpdate(new SimpleTextUpdate()));
 
@@ -57,22 +63,25 @@ class FirstFailQuizTest {
 
     @Test
     void processAnswerWithWrongMessageID() {
-        FirstFailQuiz quiz = new FirstFailQuiz();
+        QuestionRepository mockQuestionRepository = Mockito.spy(QuestionRepository.class);
+        Mockito.when(mockQuestionRepository.getRandomQuestion()).thenReturn(new TestQuestion());
+        FirstFailQuiz quiz = new FirstFailQuiz(mockQuestionRepository);
         TrueAnswerCallBackUpdate update = new TrueAnswerCallBackUpdate();
         InternalUpdate internalUpdate = new InternalUpdate(update);
         SimpleMessage message = (SimpleMessage) update.getCallbackQuery().getMessage();
         quiz.setLastMessageId(message.toInternalExecuteMessage());
         message.setMessageId(-1);
 
-        List<MessageI> messageIList = quiz.processAnswer(internalUpdate);
+        quiz.processAnswer(internalUpdate);
 
-        assertEquals(0, messageIList.size());
         assertFalse(quiz.isEnd());
     }
 
     @Test
     void checkCountOfCorrectAnswer() {
-        FirstFailQuiz quiz = new FirstFailQuiz();
+        QuestionRepository mockQuestionRepository = Mockito.spy(QuestionRepository.class);
+        Mockito.when(mockQuestionRepository.getRandomQuestion()).thenReturn(new TestQuestion());
+        FirstFailQuiz quiz = new FirstFailQuiz(mockQuestionRepository);
         TrueAnswerCallBackUpdate update = new TrueAnswerCallBackUpdate();
         InternalUpdate internalUpdate = new InternalUpdate(update);
         SimpleMessage message = (SimpleMessage) update.getCallbackQuery().getMessage();
@@ -93,8 +102,6 @@ class FirstFailQuizTest {
         List<MessageI> messageIList = quiz.processAnswer(new InternalUpdate(updateF));
 
 
-        assertNotEquals(2, messageIList.size());
         assertEquals(new TextMessage("ваш результат + " + count), messageIList.get(2));
-        assertTrue(quiz.isEnd());
     }
 }

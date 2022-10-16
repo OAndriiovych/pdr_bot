@@ -1,7 +1,6 @@
 package org.pdr.utils.db;
 
 import org.pdr.entity.Question;
-import org.pdr.repository.QuestionCache;
 
 import java.io.*;
 import java.net.HttpURLConnection;

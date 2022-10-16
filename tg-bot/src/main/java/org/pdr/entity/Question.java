@@ -8,6 +8,8 @@ import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +41,14 @@ public class Question {
         this.correctButton = correctButton;
         this.caption = caption;
         this.countOfButton = button;
+    }
+
+    public Question(ResultSet resultSet) throws SQLException {
+        url = resultSet.getString("url");
+        correctButton = resultSet.getInt("correct_button");
+        countOfButton = resultSet.getInt("count_of_button");
+        caption = resultSet.getString("caption");
+        theme = resultSet.getInt("theme_id");
     }
 
     public void setTheme(int theme) {

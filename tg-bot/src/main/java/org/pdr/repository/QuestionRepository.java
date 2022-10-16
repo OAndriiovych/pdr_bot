@@ -11,4 +11,8 @@ public interface QuestionRepository {
     Queue<Question> getQuestionsListWithSizeAndSubject(int size, double theme);
 
     Question getRandomQuestion();
+
+    String getAllTheme();
+
+    boolean isThemeValid(double themeId);
 }

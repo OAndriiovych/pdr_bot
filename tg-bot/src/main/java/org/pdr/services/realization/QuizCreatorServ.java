@@ -6,7 +6,8 @@ import org.pdr.adatpers.messages.TextMessage;
 import org.pdr.entity.User;
 import org.pdr.model.quiz.Quiz;
 import org.pdr.model.quiz.QuizBuilder;
-import org.pdr.repository.QuestionCache;
+import org.pdr.repository.QuestionCacheDB;
+import org.pdr.repository.QuestionRepository;
 import org.pdr.repository.QuizRepository;
 import org.pdr.services.EnumOfServices;
 import org.pdr.services.Response;
@@ -17,7 +18,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class QuizCreatorServ extends Service {
+
     public static final String READY = "Готовий";
+    private static final QuestionRepository questionRepository = new QuestionCacheDB();
     private static final QuizRepository quizRepository = new QuizRepository();
     private static final QuizBuilder quizBuilder = new QuizBuilder();
     private static final String REAL_TEST = "реальний тест";
@@ -94,7 +97,7 @@ public class QuizCreatorServ extends Service {
                 break;
             case BY_THEMES:
                 response.addMessage(new TextMessage("Надішліть номер теми"));
-                response.addMessage(new TextMessage(QuestionCache.TEXT_VERSION_OF_LIST_THEME));
+                response.addMessage(new TextMessage(questionRepository.getAllTheme()));
                 break;
             default:
                 response.addMessage(new TextMessage("Не зрозумів тебе"));
@@ -105,7 +108,7 @@ public class QuizCreatorServ extends Service {
 
     private Double validateThemeNumber(String userAnswer) {
         double theme = Double.parseDouble(userAnswer);
-        return QuestionCache.validateThemeNumber(theme) ? theme : null;
+        return questionRepository.isThemeValid(theme) ? theme : null;
     }
 
     @Override

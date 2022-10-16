@@ -2,12 +2,13 @@ package org.pdr.utils.db;
 
 import org.pdr.utils.MyProperties;
 
-import java.io.IOException;
-import java.sql.*;
-
-//Manager
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DBManager {
+    private static final MyProperties MY_PROPERTIES = MyProperties.getInstance();
+
     static {
         try {
             Class.forName("org.postgresql.Driver");
@@ -16,12 +17,8 @@ public class DBManager {
         }
     }
 
-    public static Connection getConnection() {
-        try {
-            return DriverManager.getConnection(MyProperties.getDBUrl(), MyProperties.getDBUserName(),
-                    MyProperties.getDBPass());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(MY_PROPERTIES.getDBUrl(), MY_PROPERTIES.getDBUserName(),
+                MY_PROPERTIES.getDBPass());
     }
 }

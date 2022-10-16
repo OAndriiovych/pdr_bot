@@ -1,14 +1,14 @@
 package org.pdr.model.quiz;
 
 import org.pdr.entity.Question;
-import org.pdr.repository.QuestionCache;
+import org.pdr.repository.QuestionCacheDB;
 import org.pdr.repository.QuestionRepository;
 
 import java.util.Queue;
 
 public class QuizBuilder {
 
-    QuestionRepository repository = new QuestionCache();
+    private  final QuestionRepository repository = new QuestionCacheDB();
     private Integer countOfQuestion = null;
     private Double theme = null;
     private boolean isRealTest = false;

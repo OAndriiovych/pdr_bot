@@ -7,7 +7,7 @@ import java.util.Properties;
 public class MyProperties {
 
     private static final MyProperties inst = new MyProperties();
-    private static final String DEFAULT_PATH = "src/main/resources/bot.properties";
+    private static final String DEFAULT_PATH = "tg-bot/src/main/resources/bot.properties";
     private static Properties properties = null;
 
     private MyProperties() {
@@ -51,11 +51,11 @@ public class MyProperties {
         return properties.getProperty("server.url");
     }
 
-    public static String getDBUrl(){return properties.getProperty("db.url");}
+    public String getDBUrl(){return properties.getProperty("db.url");}
 
-    public static String getDBPass(){return properties.getProperty("db.pass");}
+    public String getDBPass(){return properties.getProperty("db.pass");}
 
-    public static String getDBUserName(){return properties.getProperty("db.username");}
+    public String getDBUserName(){return properties.getProperty("db.username");}
 
 
 }
