@@ -51,4 +51,11 @@ public class MyProperties {
         return properties.getProperty("server.url");
     }
 
+    public static String getDBUrl(){return properties.getProperty("db.url");}
+
+    public static String getDBPass(){return properties.getProperty("db.pass");}
+
+    public static String getDBUserName(){return properties.getProperty("db.username");}
+
+
 }

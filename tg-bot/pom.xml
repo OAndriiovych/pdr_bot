@@ -26,6 +26,7 @@
         <slf4j-api.version>1.7.36</slf4j-api.version>
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-reload4j -->
         <slf4j-reload4j.version>1.7.36</slf4j-reload4j.version>
+        <postgresql.version>42.5.0</postgresql.version>
     </properties>
 
 
@@ -55,6 +56,12 @@
             <artifactId>slf4j-reload4j</artifactId>
             <version>${slf4j-reload4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
