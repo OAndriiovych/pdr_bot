@@ -15,8 +15,13 @@ class EnumOfServicesTest {
         privateField.setAccessible(true);
         for (EnumOfServices sut : EnumOfServices.values()) {
             Service service = (Service) privateField.get(sut);
-            service.processUpdate(new InternalUpdate(new SimpleTextUpdate()));
-            service.processUpdate(new InternalUpdate(new SimpleCallBackUpdate()));
+            try {
+                service.processUpdate(new InternalUpdate(new SimpleTextUpdate()));
+                service.processUpdate(new InternalUpdate(new SimpleCallBackUpdate()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println(sut);
+            }
         }
     }
 
