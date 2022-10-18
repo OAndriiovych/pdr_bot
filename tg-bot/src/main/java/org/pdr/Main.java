@@ -28,6 +28,10 @@ public class Main extends ChatSender {
 
     public static final ChatSenderI CHAT_SENDER = new Main();
 
+    private void test(){
+
+    }
+
     private static final LoadingCache<Long, EnumOfServices> SERVICE_BY_CHAT_ID_CACHE =
             CacheBuilder.newBuilder().expireAfterAccess(7, TimeUnit.DAYS).build(
                     new CacheLoader<>() {
