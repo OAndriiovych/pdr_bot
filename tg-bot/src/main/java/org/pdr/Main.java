@@ -29,7 +29,7 @@ public class Main extends ChatSender {
     public static final ChatSenderI CHAT_SENDER = new Main();
 
     private void test(){
-
+int i;
     }
 
     private static final LoadingCache<Long, EnumOfServices> SERVICE_BY_CHAT_ID_CACHE =
