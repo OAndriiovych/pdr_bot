@@ -51,6 +51,10 @@ public class Main extends ChatSender {
         }
     }
 
+    public void test(){
+        System.out.println();
+    }
+
     @Override
     public void onUpdateReceived(Update update) {
         InternalUpdate internalUpdate = new InternalUpdate(update);
