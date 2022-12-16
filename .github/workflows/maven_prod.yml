@@ -5,7 +5,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "prod" ]
 
 jobs:
   build:
@@ -33,16 +33,16 @@ jobs:
         with:
           operation: 'update'
           changeLogFile: 'tg-bot/liquibase/dbchangelog.xml'
-          username: ${{ secrets.DB_USERNAME }}
-          password: ${{ secrets.DB_PASSWORD }}
-          url: ${{ secrets.DB_URL }}
+          username: ${{ secrets.DB_PROD_USERNAME }}
+          password: ${{ secrets.DB_PROD_PASSWORD }}
+          url: ${{ secrets.DB_PROD_URL }}
   deploy:
     name: CD part
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        app-name: [ 'dev' ]
-        s3-bucket: [ 'fsdjfgasfgjknfgdsjkn-sorce' ]
+        app-name: [ 'prod' ]
+        s3-bucket: [ 'fsdjfgasfgjknfgdsjkn-prode-sorce' ]
         s3-filename: [ 'develop-aws-codedeploy-${{ github.sha }}' ]
         deploy-group: [ 'develop' ]
     needs: build
@@ -59,8 +59,10 @@ jobs:
       # copying jar
       - name: Copying scripts
         run: cp tg-bot/target/tg-bot-1.0-SNAPSHOT.jar ./tg-bot/target/deploy
-      - name: ls
-        run: ls tg-bot/target
+      - name: delete dev conf
+        run: rm /tg-bot/target/deploy/appspec.yml
+      - name: set up prod conf
+        run: mv /tg-bot/target/deploy/appspec-prod.yml /tg-bot/target/deploy/appspec.yml
       # Configure AWS credentials
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1

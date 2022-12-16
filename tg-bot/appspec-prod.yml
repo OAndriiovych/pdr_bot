@@ -2,10 +2,10 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /opt/dev
+    destination: /opt/prod
 hooks:
   ApplicationStart:
-    - location: ./start_server.sh
+    - location: ./start_prod_server.sh
       timeout: 300
       runas: root
   ApplicationStop:
