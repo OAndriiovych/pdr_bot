@@ -44,7 +44,7 @@ jobs:
         app-name: [ 'prod' ]
         s3-bucket: [ 'fsdjfgasfgjknfgdsjkn-prode-sorce' ]
         s3-filename: [ 'develop-aws-codedeploy-${{ github.sha }}' ]
-        deploy-group: [ 'develop' ]
+        deploy-group: [ 'develop-prod' ]
     needs: build
     steps:
       - uses: actions/checkout@v3
@@ -69,7 +69,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: eu-central-1
 #       Deploy push to S3
       - name: AWS Deploy push
         run: |
