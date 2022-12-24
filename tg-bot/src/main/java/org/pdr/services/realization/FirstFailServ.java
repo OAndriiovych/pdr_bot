@@ -7,7 +7,9 @@ import org.pdr.repository.FirstFailQuizRepository;
 import org.pdr.services.EnumOfServices;
 import org.pdr.services.Response;
 import org.pdr.services.Service;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FirstFailServ extends Service {
 
     private static final FirstFailQuizRepository firstFailQuizRepository = new FirstFailQuizRepository();

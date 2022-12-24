@@ -4,7 +4,7 @@ import org.pdr.adatpers.InternalUpdate;
 import org.pdr.adatpers.messages.MessageI;
 
 public abstract class Service {
-    protected EnumOfServices currentServ = null;
+    protected EnumOfServices currentServ = EnumOfServices.valueOf(this.getClass());
 
     Response processUpdate(InternalUpdate internalUpdate) {
         Response response;
@@ -22,9 +22,6 @@ public abstract class Service {
     }
 
     private Response getDef() {
-        if (currentServ == null) {
-            currentServ = EnumOfServices.valueOf(this);
-        }
         Response response = new Response(currentServ);
         response.setSendDefaultMessage(false);
         return response;

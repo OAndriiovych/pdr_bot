@@ -6,11 +6,13 @@ import org.pdr.adatpers.messages.TextMessage;
 import org.pdr.services.EnumOfServices;
 import org.pdr.services.Response;
 import org.pdr.services.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Component
 public class MainMenuServ extends Service {
     private static final String ALL_QUESTION = "Тести";
     private static final String USER_ROOM = "кабінет";

@@ -8,11 +8,13 @@ import org.pdr.repository.QuizRepository;
 import org.pdr.services.EnumOfServices;
 import org.pdr.services.Response;
 import org.pdr.services.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Component
 public class QuizHandlerServ extends Service {
     private static final String SAVE_QUESTION = "Зберегти питання";
     private static final String END_OF_TEST = "закінчити тест";

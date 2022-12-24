@@ -10,12 +10,14 @@ import org.pdr.model.payment.UserModel;
 import org.pdr.services.EnumOfServices;
 import org.pdr.services.Response;
 import org.pdr.services.Service;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Contact;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Component
 public class UserRegisteredServ extends Service {
 
     private static final String REG_USER = "Створити аккаунт";
