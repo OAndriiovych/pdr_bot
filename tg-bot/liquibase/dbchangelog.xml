@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="L" id="1671204185298-1">
+        <createTable tableName="theme">
+            <column autoIncrement="true" name="theme_id" startWith="76" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="theme_pkey"/>
+            </column>
+            <column name="caption" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="L" id="1671204185298-2">
+        <createTable tableName="questions">
+            <column autoIncrement="true" name="question_id" startWith="2141" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="questions_pkey"/>
+            </column>
+            <column name="theme_id" type="INTEGER"/>
+            <column name="caption" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="null image" name="url" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="count_of_button" type="INTEGER"/>
+            <column name="correct_button" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="L" id="1671204185298-3">
+        <addForeignKeyConstraint baseColumnNames="theme_id" baseTableName="questions" constraintName="questions_theme_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="theme_id" referencedTableName="theme" validate="true"/>
+    </changeSet>
+    <includeAll path="liquibase/changelogs/"/>
+</databaseChangeLog>
