@@ -1,5 +1,6 @@
 package org.pdr.services;
 
+import lombok.*;
 import org.pdr.adatpers.InternalExecuteMessage;
 import org.pdr.adatpers.messages.MessageI;
 import org.pdr.utils.DataStructure;
@@ -8,52 +9,42 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Getter
+@Setter
+@Builder
 @DataStructure
+@AllArgsConstructor
 public class Response {
     private EnumOfServices nextServ;
 
     private boolean sendDefaultMessage = true;
-    private Consumer<List<InternalExecuteMessage>> callback = a -> {
-    };
-    private final List<MessageI> messageIList = new LinkedList<>();
+    private Consumer<List<InternalExecuteMessage>> callback;
+
+    @Singular
+    private List<MessageI> messages;
 
     public Response(EnumOfServices defaultService) {
         this.nextServ = defaultService;
+        this.messages = new LinkedList<>();
+        this.callback = a -> {
+        };
     }
 
     public void addMessage(MessageI messageI) {
-        messageIList.add(messageI);
+        messages.add(messageI);
     }
 
     public void addMessage(List<MessageI> messageI) {
-        messageIList.addAll(messageI);
+        messages.addAll(messageI);
     }
 
-    EnumOfServices getNextServ() {
-        return nextServ;
+    List<MessageI> getMessages() {
+        return messages;
     }
 
-    public void setNextServ(EnumOfServices nextServ) {
-        this.nextServ = nextServ;
-    }
-
-    boolean isSendDefaultMessage() {
-        return sendDefaultMessage;
-    }
-
-    public void setSendDefaultMessage(boolean sendDefaultMessage) {
-        this.sendDefaultMessage = sendDefaultMessage;
-    }
-
-    Consumer<List<InternalExecuteMessage>> getCallback() {
-        return callback;
-    }
-
-    public void setCallback(Consumer<List<InternalExecuteMessage>> callback) {
-        this.callback = callback;
-    }
-
-    List<MessageI> getMessageIList() {
-        return messageIList;
+    public void executeCallback(List<InternalExecuteMessage> execute) {
+        if (callback!=null){
+            callback.accept(execute);
+        }
     }
 }

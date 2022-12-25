@@ -35,7 +35,7 @@ public class BotStarter extends ChatSender {
 
     @Override
     public void onUpdateReceived(Update update) {
-        processUpdate.onUpdateReceived(update);
+        processUpdate.onUpdateReceived(new InternalUpdate(update));
     }
 
     @Override
