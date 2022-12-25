@@ -6,12 +6,12 @@ import org.pdr.adatpers.messages.TextMessage;
 import org.pdr.entity.User;
 import org.pdr.model.quiz.Quiz;
 import org.pdr.model.quiz.QuizBuilder;
-import org.pdr.repository.QuestionCacheDB;
 import org.pdr.repository.QuestionRepository;
 import org.pdr.repository.QuizRepository;
 import org.pdr.services.EnumOfServices;
 import org.pdr.services.Response;
 import org.pdr.services.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -22,14 +22,16 @@ import java.util.List;
 public class QuizCreatorServ extends Service {
 
     public static final String READY = "Готовий";
-    private static final QuestionRepository questionRepository = new QuestionCacheDB();
     private static final QuizRepository quizRepository = new QuizRepository();
-    private static final QuizBuilder quizBuilder = new QuizBuilder();
     private static final String REAL_TEST = "реальний тест";
     private static final String FIRST_FAIL = "First fail";
     private static final String BY_THEMES = "По темам";
     private static final List<List<String>> listOfCommands = Collections.unmodifiableList(createListOfCommands());
     private static final List<List<String>> readyCommand = Collections.unmodifiableList(createReadyCommand());
+    @Autowired
+    private QuizBuilder quizBuilder;
+    @Autowired
+    private QuestionRepository questionRepository;
 
     private static List<List<String>> createReadyCommand() {
         List<List<String>> buttons = new ArrayList<>();

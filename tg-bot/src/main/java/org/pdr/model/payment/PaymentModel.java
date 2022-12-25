@@ -7,20 +7,23 @@ import org.pdr.entity.User;
 import org.pdr.repository.PaymentRepository;
 import org.pdr.repository.UserRepository;
 import org.pdr.utils.LiqPayUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Component
 public class PaymentModel {
     private final UserRepository userRepository;
     private final PaymentRepository paymentRepository;
-    private final LiqPayUtil liqPayUtil;
+    @Autowired
+    private LiqPayUtil liqPayUtil;
 
     public PaymentModel() {
         this.userRepository = new UserRepository();
         this.paymentRepository = new PaymentRepository();
-        this.liqPayUtil = new LiqPayUtil();
     }
 
     public List<MessageI> createPayment(long chatId) {

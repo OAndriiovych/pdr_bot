@@ -18,9 +18,11 @@ public class BotStarter extends ChatSender {
     private static final Logger logger = LoggerFactory.getLogger(BotStarter.class);
     @Autowired
     Sender processUpdate;
+    @Autowired
+    MyProperties yProperties2;
 
     @PostConstruct
-    public void startBot(){
+    public void startBot() {
         processUpdate.setCHAT_SENDER(this);
         try {
             logger.info("starting the bot");
@@ -29,7 +31,7 @@ public class BotStarter extends ChatSender {
         } catch (TelegramApiException e) {
             logger.error("ERROR in Main method", e);
         }
-  }
+    }
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -38,11 +40,11 @@ public class BotStarter extends ChatSender {
 
     @Override
     public String getBotUsername() {
-        return MyProperties.getInstance().getTelegramBotName();
+        return yProperties2.getTelegramBotName();
     }
 
     @Override
     public String getBotToken() {
-        return MyProperties.getInstance().getTelegramBotToken();
+        return yProperties2.getTelegramBotToken();
     }
 }

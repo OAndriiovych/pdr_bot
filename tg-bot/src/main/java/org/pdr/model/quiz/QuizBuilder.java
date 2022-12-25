@@ -1,14 +1,16 @@
 package org.pdr.model.quiz;
 
 import org.pdr.entity.Question;
-import org.pdr.repository.QuestionCacheDB;
 import org.pdr.repository.QuestionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Queue;
 
+@Component
 public class QuizBuilder {
-
-    private  final QuestionRepository repository = new QuestionCacheDB();
+    @Autowired
+    private QuestionRepository repository;
     private Integer countOfQuestion = null;
     private Double theme = null;
     private boolean isRealTest = false;

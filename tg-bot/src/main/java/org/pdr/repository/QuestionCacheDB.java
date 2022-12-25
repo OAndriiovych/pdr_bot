@@ -2,7 +2,10 @@ package org.pdr.repository;
 
 import org.pdr.entity.Question;
 import org.pdr.utils.db.DBManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,21 +13,21 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Repository
 public class QuestionCacheDB implements QuestionRepository {
 
     private static final String SELECT_FROM_QUESTIONS = "SELECT * FROM questions q ORDER BY theme_id";
     private static final String SELECT_FROM_THEME = "SELECT * FROM theme ORDER BY theme_id";
     private static final Random RANDOM = new Random();
-    private static Map<Double, List<Question>> questionByThemeId;
-    private static List<Question> questionList;
-    private static String textVersionOfListTheme;
+    @Autowired
+    private DBManager dbManager;
+    private Map<Double, List<Question>> questionByThemeId;
+    private List<Question> questionList;
+    private String textVersionOfListTheme;
 
-    static {
-        load();
-    }
-
-    private static void load() {
-        try (Connection connection = DBManager.getConnection()) {
+    @PostConstruct
+    private void load() {
+        try (Connection connection = dbManager.getConnection()) {
             Map<Integer, List<Question>> questions = loadQuestion(connection);
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_FROM_THEME);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -38,11 +41,9 @@ public class QuestionCacheDB implements QuestionRepository {
                 double d = Double.parseDouble(substring.substring(0, substring.length() - 1));
                 questionByThemeId.put(d, questions.get(theme_id));
             }
-            synchronized (QuestionCacheDB.class) {
-                QuestionCacheDB.questionByThemeId = questionByThemeId;
-                textVersionOfListTheme = stringBuilder.toString();
-                questionList = questionByThemeId.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
-            }
+            this.questionByThemeId = questionByThemeId;
+            textVersionOfListTheme = stringBuilder.toString();
+            questionList = questionByThemeId.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
         } catch (SQLException e) {
             e.printStackTrace();
         }

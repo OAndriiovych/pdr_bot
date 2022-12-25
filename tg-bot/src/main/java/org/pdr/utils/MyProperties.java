@@ -1,61 +1,32 @@
 package org.pdr.utils;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
+@Getter
+@Setter
+@Configuration
+@PropertySource("file:${" + MyProperties.PATH_LIABLE + "}")
 public class MyProperties {
-
-    private static final MyProperties inst = new MyProperties();
-    private static final String DEFAULT_PATH = "tg-bot/src/main/resources/bot.properties";
-    private static Properties properties = null;
-
-    private MyProperties() {
-    }
-
-    public static MyProperties getInstance() {
-        if (properties == null) {
-            try {
-                reloadPropertiesFile(DEFAULT_PATH);
-            } catch (IOException ignore) {
-            }
-        }
-        return inst;
-    }
-
-    public static void reloadPropertiesFile(String path) throws IOException {
-        Properties properties = new Properties();
-        try (FileInputStream fis = new FileInputStream(path)) {
-            properties.load(fis);
-        }
-        MyProperties.properties = properties;
-    }
-
-    public String getTelegramBotToken() {
-        return properties.getProperty("bot.token");
-    }
-
-    public String getTelegramBotName() {
-        return properties.getProperty("bot.name");
-    }
-
-    public String getLiqPayPublicKey() {
-        return properties.getProperty("liqpay.publicKey");
-    }
-
-    public String getLiqPayPrivateKey() {
-        return properties.getProperty("liqpay.privateKey");
-    }
-
-    public String getServerUrl() {
-        return properties.getProperty("server.url");
-    }
-
-    public String getDBUrl(){return properties.getProperty("db.url");}
-
-    public String getDBPass(){return properties.getProperty("db.pass");}
-
-    public String getDBUserName(){return properties.getProperty("db.username");}
-
+    public static final String PATH_LIABLE = "bot.properties";
+    @Value("${bot.token}")
+    String telegramBotToken;
+    @Value("${bot.name}")
+    String TelegramBotName;
+    @Value("${liqpay.publicKey}")
+    String LiqPayPublicKey;
+    @Value("${liqpay.publicKey}")
+    String LiqPayPrivateKey;
+    @Value("${server.url}")
+    String ServerUrl;
+    @Value("${db.url}")
+    String DBUrl;
+    @Value("${db.pass}")
+    String DBPass;
+    @Value("${db.username}")
+    String DBUserName;
 
 }
