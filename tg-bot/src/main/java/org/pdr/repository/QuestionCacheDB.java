@@ -20,7 +20,6 @@ public class QuestionCacheDB implements QuestionRepository {
     private static final String SELECT_FROM_QUESTIONS = "SELECT * FROM questions q ORDER BY theme_id";
     private static final String SELECT_FROM_THEME = "SELECT * FROM theme ORDER BY theme_id";
     private static final Random RANDOM = new Random();
-    private static String partOfUrl;
     @Autowired
     private DBManager dbManager;
     @Autowired
@@ -31,7 +30,6 @@ public class QuestionCacheDB implements QuestionRepository {
 
     @PostConstruct
     private void load() {
-        partOfUrl = myProperties.getBucketURL();
         try (Connection connection = dbManager.getConnection()) {
             Map<Integer, List<Question>> questions = loadQuestion(connection);
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_FROM_THEME);
@@ -54,16 +52,14 @@ public class QuestionCacheDB implements QuestionRepository {
         }
     }
 
-    private static Map<Integer, List<Question>> loadQuestion(Connection connection) throws SQLException {
+    private Map<Integer, List<Question>> loadQuestion(Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(SELECT_FROM_QUESTIONS);
         ResultSet resultSet = preparedStatement.executeQuery();
         Map<Integer, List<Question>> result = new HashMap<>();
         while (resultSet.next()) {
             int theme_id = resultSet.getInt("theme_id");
             List<Question> orDefault = result.computeIfAbsent(theme_id, ArrayList::new);
-            Question question = new Question(resultSet);
-            question.setUrl(partOfUrl.concat(question.getUrl()).concat(".jpg"));
-            orDefault.add(question);
+            orDefault.add(new Question(resultSet,myProperties.getBucketURL()));
         }
         return result;
     }

@@ -22,7 +22,7 @@ public class Question {
     private static final String COUNT_OF_BUTTON_LABEL = "CountOfButton";
     private static final String THEME_LABEL = "theme";
     public final String caption;
-    private String url;
+    private final String url;
     private final int correctButton;
     private final int countOfButton;
 
@@ -43,24 +43,12 @@ public class Question {
         this.countOfButton = button;
     }
 
-    public Question(ResultSet resultSet) throws SQLException {
-        url = resultSet.getString("url");
+    public Question(ResultSet resultSet,String partOfUrl) throws SQLException {
+        url =  partOfUrl.concat(resultSet.getString("url")).concat("jpg");
         correctButton = resultSet.getInt("correct_button");
         countOfButton = resultSet.getInt("count_of_button");
         caption = resultSet.getString("caption");
         theme = resultSet.getInt("theme_id");
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setTheme(int theme) {
-        this.theme = theme;
     }
 
     private boolean hasPhoto() {

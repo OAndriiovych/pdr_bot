@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 @Setter
 @Builder
 @DataStructure
-@NoArgsConstructor
 @AllArgsConstructor
 public class Response {
     private EnumOfServices nextServ;
