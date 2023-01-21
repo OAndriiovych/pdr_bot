@@ -1,6 +1,7 @@
 package org.pdr.repository;
 
 import org.pdr.entity.Question;
+import org.pdr.utils.MyProperties;
 import org.pdr.utils.db.DBManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,14 +20,18 @@ public class QuestionCacheDB implements QuestionRepository {
     private static final String SELECT_FROM_QUESTIONS = "SELECT * FROM questions q ORDER BY theme_id";
     private static final String SELECT_FROM_THEME = "SELECT * FROM theme ORDER BY theme_id";
     private static final Random RANDOM = new Random();
+    private static String partOfUrl;
     @Autowired
     private DBManager dbManager;
+    @Autowired
+    private MyProperties myProperties;
     private Map<Double, List<Question>> questionByThemeId;
     private List<Question> questionList;
     private String textVersionOfListTheme;
 
     @PostConstruct
     private void load() {
+        partOfUrl = myProperties.getBucketURL();
         try (Connection connection = dbManager.getConnection()) {
             Map<Integer, List<Question>> questions = loadQuestion(connection);
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_FROM_THEME);
@@ -56,7 +61,9 @@ public class QuestionCacheDB implements QuestionRepository {
         while (resultSet.next()) {
             int theme_id = resultSet.getInt("theme_id");
             List<Question> orDefault = result.computeIfAbsent(theme_id, ArrayList::new);
-            orDefault.add(new Question(resultSet));
+            Question question = new Question(resultSet);
+            question.setUrl(partOfUrl.concat(question.getUrl()).concat(".jpg"));
+            orDefault.add(question);
         }
         return result;
     }

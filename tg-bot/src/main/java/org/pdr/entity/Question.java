@@ -22,7 +22,7 @@ public class Question {
     private static final String COUNT_OF_BUTTON_LABEL = "CountOfButton";
     private static final String THEME_LABEL = "theme";
     public final String caption;
-    private final String url;
+    private String url;
     private final int correctButton;
     private final int countOfButton;
 
@@ -51,12 +51,20 @@ public class Question {
         theme = resultSet.getInt("theme_id");
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
     public void setTheme(int theme) {
         this.theme = theme;
     }
 
     private boolean hasPhoto() {
-        return !url.equals(NULL_IMAGE);
+        return !url.contains(NULL_IMAGE);
     }
 
     public MessageI createMessage() {

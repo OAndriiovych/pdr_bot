@@ -28,5 +28,7 @@ public class MyProperties {
     String DBPass;
     @Value("${db.username}")
     String DBUserName;
+    @Value("${bucket.url}")
+    String BucketURL;
 
 }

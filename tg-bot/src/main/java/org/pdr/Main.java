@@ -15,6 +15,6 @@ public class Main {
 
     private static void processConsoleArgs(String[] args) {
         CliArgs cliArgs = new CliArgs(args);
-        System.setProperty(MyProperties.PATH_LIABLE, cliArgs.switchValue("-botProperties", "tg-bot/src/main/resources/bot2.properties"));
+        System.setProperty(MyProperties.PATH_LIABLE, cliArgs.switchValue("-botProperties", "tg-bot/src/main/resources/bot.properties"));
     }
 }
