@@ -43,20 +43,16 @@ public class Question {
         this.countOfButton = button;
     }
 
-    public Question(ResultSet resultSet) throws SQLException {
-        url = resultSet.getString("url");
+    public Question(ResultSet resultSet,String partOfUrl) throws SQLException {
+        url =  partOfUrl.concat(resultSet.getString("url")).concat("jpg");
         correctButton = resultSet.getInt("correct_button");
         countOfButton = resultSet.getInt("count_of_button");
         caption = resultSet.getString("caption");
         theme = resultSet.getInt("theme_id");
     }
 
-    public void setTheme(int theme) {
-        this.theme = theme;
-    }
-
     private boolean hasPhoto() {
-        return !url.equals(NULL_IMAGE);
+        return !url.contains(NULL_IMAGE);
     }
 
     public MessageI createMessage() {
